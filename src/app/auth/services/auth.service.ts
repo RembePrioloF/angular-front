@@ -16,14 +16,15 @@ export class AuthService {
     if (!this.user) return undefined;
     return structuredClone(this.user);
   }
+
   register(user: any): Observable<any> {
     const registerUrl = `${this.baseUrl}/auth/register`;
     return this.http.post(registerUrl, user);
   }
+
   login(email: string, password: string): Observable<User> {
     // Construye un objeto de credenciales para enviar al servidor
     const credentials = { email, password };
-
     return this.http.post<User>(`${this.baseUrl}/auth/login`, credentials).pipe(
       tap((user) => {
         // Almacena el token en el almacenamiento local o en las cookies
@@ -37,7 +38,7 @@ export class AuthService {
   checkAuthentication(): Observable<boolean> {
     if (!localStorage.getItem('token')) return of(false);
     const token = localStorage.getItem('token');
-    return this.http.get<User>(`${this.baseUrl}/users/1`)
+    return this.http.get<User>(`${this.baseUrl}/auth/`)
       .pipe(
         tap(user => this.user = user),
         map(user => !!user),

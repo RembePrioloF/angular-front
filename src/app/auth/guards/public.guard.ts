@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { CanMatch, CanActivate, Router, Route, UrlSegment, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable, tap, map } from 'rxjs';
+import { ActivatedRouteSnapshot, CanActivate, CanMatch, Route, Router, RouterStateSnapshot, UrlSegment } from '@angular/router';
+import { Observable, map, tap } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
 @Injectable({ providedIn: 'root' })
@@ -12,13 +12,12 @@ export class PublicGuard implements CanMatch, CanActivate {
   ) { }
 
   private checkAuthStatus(): boolean | Observable<boolean> {
-
     return this.authService.checkAuthentication()
       .pipe(
         tap(isAuthenticated => console.log('Authenticated:', isAuthenticated)),
         tap(isAuthenticated => {
           if (isAuthenticated) {
-            this.router.navigate(['./'])
+            this.router.navigate(['./tournaments/tournament'])
           }
         }),
         map(isAuthenticated => !isAuthenticated)
@@ -26,14 +25,10 @@ export class PublicGuard implements CanMatch, CanActivate {
   }
 
   canMatch(route: Route, segments: UrlSegment[]): boolean | Observable<boolean> {
-    // console.log('Can Match');
-    // console.log({ route, segments })
     return this.checkAuthStatus();
   }
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | Observable<boolean> {
-    // console.log('Can Activate');
-    // console.log({ route, state })
     return this.checkAuthStatus();
   }
 
