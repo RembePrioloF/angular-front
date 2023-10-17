@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service'; // Importa el servicio de autenticación
 
@@ -7,15 +8,26 @@ import { AuthService } from '../../services/auth.service'; // Importa el servici
   templateUrl: './register-page.component.html',
   styleUrls: ['./register-page.component.css']
 })
-export class RegisterPageComponent {
+export class RegisterPageComponent implements OnInit {
+
   name: string = '';
   email: string = '';
   password: string = '';
   role: string = '';
+  roles: string[] = [];
 
   constructor(
     private authService: AuthService,
-    private router: Router) { }
+    private router: Router,
+    private http: HttpClient,
+  ) { }
+
+  ngOnInit(): void {
+    // Llama a la API para obtener los valores del enum
+    this.http.get<string[]>('http://localhost:3000/auth/roles').subscribe((data) => {
+      this.roles = data;
+    });
+  }
 
   onRegister(): void {
     // Crea un objeto con los datos del usuario a registrar
@@ -40,4 +52,5 @@ export class RegisterPageComponent {
         }
       });
   }
+
 }

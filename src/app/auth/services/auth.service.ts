@@ -25,14 +25,15 @@ export class AuthService {
   login(email: string, password: string): Observable<User> {
     // Construye un objeto de credenciales para enviar al servidor
     const credentials = { email, password };
-    return this.http.post<User>(`${this.baseUrl}/auth/login`, credentials).pipe(
-      tap((user) => {
-        // Almacena el token en el almacenamiento local o en las cookies
-        if (user && user.token) {
-          localStorage.setItem('token', user.token);
-        }
-      })
-    );
+    return this.http.post<User>(`${this.baseUrl}/auth/login`, credentials)
+      .pipe(
+        tap((user) => {
+          // Almacena el token en el almacenamiento local o en las cookies
+          if (user && user.token) {
+            localStorage.setItem('token', user.token);
+          }
+        })
+      );
   }
 
   checkAuthentication(): Observable<boolean> {
