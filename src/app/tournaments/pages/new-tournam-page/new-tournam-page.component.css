@@ -2,6 +2,7 @@
   margin: 20px;
 }
 
-.row {
+.card {
   margin-top: 100px;
+  max-width: 600px;
 }

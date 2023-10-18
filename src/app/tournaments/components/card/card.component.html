@@ -1,16 +1,14 @@
-<div class="card border-dark">
+<div class="card border-dark mx-auto">
   <div class="row m-0">
-    <div class="col-md-4 p-0 ">
+    <div class="col-4 p-0 w-25">
       <img src="../../../../assets/logoTorneo.png" class="img-fluid rounded-start" alt="logoTorneo">
     </div>
-    <div class="col-md-8 ">
+    <div class="col-8 ">
       <div class="card-body p-1">
         <h6 class="card-title crop-text mb-4 mb-md-0">{{tournament.name}}</h6>
         <div class="position-absolute bottom-0 end-0">
-          <p class="card-text me-1">
-            <small class="text-body-secondary">
-              Creado: {{tournament.createdAt | date:'dd MMMM yyyy'}}
-            </small>
+          <p class="card-text me-1"><small class="text-body-secondary">
+              Creado: {{tournament.createdAt | date:'dd MMMM yyyy'}}</small>
           </p>
         </div>
       </div>

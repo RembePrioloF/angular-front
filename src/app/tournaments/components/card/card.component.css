@@ -5,8 +5,12 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
 }
+
 .card{
   max-width: 350px;
   min-width: 250px;
 }
 
+img{
+  height: 100px;
+}
