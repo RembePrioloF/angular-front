@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environments } from '../../../environments/environments';
-import { Observable, catchError } from 'rxjs';
 import { Tournament } from '../interfaces/tournament.interfece';
 
 @Injectable({ providedIn: 'root' })
 export class TournamentService {
 
-  private baseUrl: string  = environments.baseUrl;
+  private baseUrl: string = environments.baseUrl;
 
   constructor(private http: HttpClient) { }
 
