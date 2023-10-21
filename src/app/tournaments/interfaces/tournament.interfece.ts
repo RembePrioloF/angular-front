@@ -1,11 +1,23 @@
 
 export interface Tournament {
-  tournamId: string;
+  tournamId:      string;
+  name:           string;
+  location:       string;
+  league:         string;
+  startDate:      string;
+  endDate:        null;
+  createdAt:      string;
+  updatedAt:      string;
+  deleteAt:       null;
+  participations: any[];
+  teams:          Team[];
+}
+
+export interface Team {
+  teamId:    string;
   name:      string;
-  location:  string;
-  league:    string;
-  startDate: string;
-  endDate:   null | string;
+  logo:      null;
+  coach:     null;
   createdAt: string;
   updatedAt: string;
   deleteAt:  null;

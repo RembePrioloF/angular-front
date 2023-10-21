@@ -9,8 +9,10 @@
 .card{
   max-width: 350px;
   min-width: 250px;
+  cursor: pointer;
 }
 
 img{
   height: 100px;
+  width: 100px;
 }

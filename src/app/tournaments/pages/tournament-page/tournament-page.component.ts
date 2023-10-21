@@ -1,22 +1,128 @@
-import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Observable, of } from 'rxjs';
+import Swal from 'sweetalert2';
 import { Tournament } from '../../interfaces/tournament.interfece';
+import { TournamentService } from '../../services/tournament.service';
 
 @Component({
   selector: 'tournament-page',
   templateUrl: './tournament-page.component.html',
   styleUrls: ['./tournament-page.component.css']
 })
-export class TournamentPageComponent {
+export class TournamentPageComponent implements OnInit {
 
+  public league: string[] = [];
   public tournaments: Tournament[] = [];
+  startDateErrorMessage: string = '';
+  endDateErrorMessage: string = '';
 
   constructor(
+    private tournamentService: TournamentService,
     private router: Router,
+    private http: HttpClient,
   ) { }
 
-  newTournam() {
-    this.router.navigateByUrl('/tournaments/new-tournam');
+  public formTournam = new FormGroup({
+    name: new FormControl<string>('', [Validators.required]),
+    startDate: new FormControl('', [Validators.required], this.validateStartDate()),
+    endDate: new FormControl(null, [], this.validateEndDate()),
+    location: new FormControl<string>('', [Validators.required]),
+    league: new FormControl<string>('', [Validators.required]),
+  });
+
+  get currentTournam(): Tournament {
+    const tournam = this.formTournam.value as Tournament;
+    return tournam;
+  }
+
+  ngOnInit(): void {
+    // Llama a la API para obtener los valores del enum
+    this.http.get<string[]>('http://localhost:3000/tournam/league').subscribe((data) => {
+      this.league = data;
+    });
+
+    this.tournamentService.getTournament()
+      .subscribe(response => this.tournaments = response);
+    this.formTournam.reset();
+  }
+
+  onSubmit() {
+    if (this.formTournam.invalid) {
+      this.formTournam.markAllAsTouched();
+      return;
+    }
+    if (!this.formTournam?.get('endDate')?.value) {
+      this.formTournam?.get('endDate')?.setValue(null);
+    }
+    this.tournamentService.createTournament(this.currentTournam)
+      .subscribe({
+        next: (response) => {
+          this.showSuccessNotification('Tournament created successfully! ' + response.name);
+          this.ngOnInit();
+        },
+        error: (error) => {
+          console.log(error);
+          this.showErrorNotification('An error occurred while creating the tournament. ' + error.error.message);
+        }
+      });
+  }
+
+  onParticipation(tournamId: string) {
+    this.router.navigate(['/tournaments/participation', tournamId]);
+
+  }
+
+  isInvalid(fieldName: string): boolean {
+    const control = this.formTournam.get(fieldName) as FormControl;
+    return control.invalid && control.touched;
+  }
+
+  validateStartDate(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      const startDate = new Date(control.value);
+      const currentDate = new Date();
+      currentDate.setUTCHours(0, 0, 0, 0);
+      const currentDateStr = new Date(currentDate);
+      if (startDate < currentDateStr) {
+        this.startDateErrorMessage = 'La fecha de inicio debe ser posterior a la fecha actual.';
+        return of({ invalidStartDate: true });
+      }
+      this.startDateErrorMessage = '';
+      return of(null);
+    };
+  }
+
+  validateEndDate(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      const endDate = new Date(control.value);
+      const startDateControl = this.formTournam?.get('startDate')?.value;
+      const startDate = new Date(startDateControl as string);
+      if (endDate < startDate && this.formTournam?.get('endDate')?.value != null) {
+        this.endDateErrorMessage = 'La fecha de finalización debe ser posterior a la fecha de inicio.';
+        return of({ invalidEndDate: true });
+      }
+      this.endDateErrorMessage = '';
+      return of(null);
+    };
+  }
+
+  private showSuccessNotification(message: string) {
+    Swal.fire({
+      icon: 'success',
+      title: 'Success',
+      text: message,
+    });
+  }
+
+  private showErrorNotification(message: string) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: message,
+    });
   }
 
 }

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { NewTournamPageComponent } from './pages/new-tournam-page/new-tournam-page.component';
+import { ParticipationPageComponent } from './pages/participation-page/participation-page.component';
 import { TournamentPageComponent } from './pages/tournament-page/tournament-page.component';
 
 const routes: Routes = [
@@ -8,7 +8,7 @@ const routes: Routes = [
     path: '',
     children: [
       { path: 'tournament', component: TournamentPageComponent },
-      { path: 'new-tournam', component: NewTournamPageComponent },
+      { path: 'participation/:id', component: ParticipationPageComponent },
       { path: '**', redirectTo: 'tournament' },
     ]
   }

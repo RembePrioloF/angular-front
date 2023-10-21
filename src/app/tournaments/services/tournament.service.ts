@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, catchError, of } from 'rxjs';
 import { environments } from '../../../environments/environments';
 import { Tournament } from '../interfaces/tournament.interfece';
 
@@ -17,6 +17,11 @@ export class TournamentService {
 
   getTournament(): Observable<Tournament[]> {
     return this.http.get<Tournament[]>(`${this.baseUrl}/tournam`)
+  }
+
+  getTournamentById(id: string): Observable<Tournament | undefined> {
+    return this.http.get<Tournament>(`${this.baseUrl}/tournam/${id}`)
+      .pipe(catchError(e => of(undefined)));
   }
 
 }
