@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { User } from '../../interfaces/user.interfece';
 import { AuthService } from '../../services/auth.service';
@@ -15,7 +15,7 @@ export class LoginPageComponent {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) { }
 
   public formUser = new FormGroup({
@@ -38,7 +38,6 @@ export class LoginPageComponent {
     // Llamar al servicio de autenticación para realizar la solicitud de inicio de sesión
     this.authService.login(this.currentUser.email, this.currentUser.password).subscribe({
       next: (user) => {
-        // La autenticación fue exitosa, redirigir al usuario a la página principal u otra página deseada.
         this.router.navigate(['/tournaments/tournament']);
       },
       error: (error) => {

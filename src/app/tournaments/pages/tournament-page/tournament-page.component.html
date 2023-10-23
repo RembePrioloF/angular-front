@@ -1,5 +1,5 @@
 <div class="centenedor">
-  <app-sidebar></app-sidebar>
+  <app-navbar></app-navbar>
 
   <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-dialog-centered">
@@ -89,7 +89,8 @@
     <div class="container">
       <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         <div *ngFor="let tournament of tournaments">
-          <tournam-card [tournament]="tournament" (click)="onParticipation(tournament.tournamId)"></tournam-card>
+          <tournam-card [tournament]="tournament" (click)="onParticipation(tournament.tournamId)">
+          </tournam-card>
         </div>
       </div>
     </div>

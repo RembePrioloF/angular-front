@@ -3,13 +3,13 @@
   flex-direction: column; /* Asegura que los elementos se apilen verticalmente */
   justify-content: center; /* Centra verticalmente el contenido en el contenedor */
   text-align: center;
-  background-color: #eeeded;
+  background-color: #eeeded55;
   width: 80%;
   max-width: 680px;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(231, 229, 229, 0.1);
-  margin: 0 auto; /* Centra el contenedor horizontalmente en la página */
+  margin: 0 auto;
 }
 
 .login-title {
@@ -61,4 +61,12 @@ label {
 
 .register-link a:hover {
   text-decoration: underline;
+}
+
+body {
+  background-image: url("../../../../assets/bgTournam.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  height: 100vh;
 }

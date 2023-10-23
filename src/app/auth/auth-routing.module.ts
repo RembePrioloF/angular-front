@@ -1,16 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { Error404PageComponent } from '../shared/pages/error404-page/error404-page.component';
 import { LoginPageComponent } from './pages/login-page/login-page.component';
 import { RegisterPageComponent } from './pages/register-page/register-page.component';
-import { LayoutPageComponent } from './pages/layout-page/layout-page.component';
 
 const routes: Routes = [
   {
-    path: '', component: LayoutPageComponent,
+    path: '',
     children: [
-      { path: 'register', component: RegisterPageComponent },
       { path: 'login', component: LoginPageComponent },
-      { path: '**', redirectTo: 'register' },
+      { path: 'register', component: RegisterPageComponent },
+      { path: '404', component: Error404PageComponent },
+      { path: '**', redirectTo: '404' },
     ]
   }
 ];

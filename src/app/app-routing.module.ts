@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth/guards/auth.guard';
 import { PublicGuard } from './auth/guards/public.guard';
 import { Error404PageComponent } from './shared/pages/error404-page/error404-page.component';
+import { StartPageComponent } from './shared/pages/start-page/start-page.component';
 
 const routes: Routes = [
   {
@@ -16,12 +17,22 @@ const routes: Routes = [
     canActivate: [AuthGuard], canMatch: [AuthGuard]
   },
   {
+    path: 'start',
+    component: StartPageComponent,
+    canActivate: [PublicGuard], canMatch: [PublicGuard]
+  },
+  {
     path: '404',
     component: Error404PageComponent
   },
   {
+    path: '',
+    redirectTo: 'start',
+    pathMatch: 'full'
+  },
+  {
     path: '**',
-    redirectTo: 'tournaments'
+    redirectTo: '404'
   }
 ];
 

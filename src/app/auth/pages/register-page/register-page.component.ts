@@ -13,10 +13,6 @@ import { User } from '../../interfaces/user.interfece';
 })
 export class RegisterPageComponent implements OnInit {
 
-  name: string = '';
-  email: string = '';
-  password: string = '';
-  role: string = '';
   roles: string[] = [];
 
   constructor(
@@ -54,7 +50,6 @@ export class RegisterPageComponent implements OnInit {
         next: (response) => {
           // El registro fue exitoso, puedes redirigir al usuario o mostrar un mensaje de éxito.
           this.showSuccessNotification('Registro exitoso: ')
-          console.log('Registro exitoso:', response);
           // Redirige al usuario a la página de inicio de sesión u otra página deseada.
           this.router.navigate(['/auth/login']);
         },

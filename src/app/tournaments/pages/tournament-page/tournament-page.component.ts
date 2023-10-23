@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, AsyncValidatorFn, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
+import { AuthService } from 'src/app/auth/services/auth.service';
 import Swal from 'sweetalert2';
 import { Tournament } from '../../interfaces/tournament.interfece';
 import { TournamentService } from '../../services/tournament.service';
@@ -16,11 +17,13 @@ export class TournamentPageComponent implements OnInit {
 
   public league: string[] = [];
   public tournaments: Tournament[] = [];
+  id: string = '';
   startDateErrorMessage: string = '';
   endDateErrorMessage: string = '';
 
   constructor(
     private tournamentService: TournamentService,
+    private authService: AuthService,
     private router: Router,
     private http: HttpClient,
   ) { }
@@ -35,6 +38,7 @@ export class TournamentPageComponent implements OnInit {
 
   get currentTournam(): Tournament {
     const tournam = this.formTournam.value as Tournament;
+    tournam.user = this.id;
     return tournam;
   }
 
@@ -44,8 +48,12 @@ export class TournamentPageComponent implements OnInit {
       this.league = data;
     });
 
-    this.tournamentService.getTournament()
-      .subscribe(response => this.tournaments = response);
+    this.id = this.authService.getUserId() as string;
+    this.authService.getUserById(this.id)
+      .subscribe((response) => {
+        this.tournaments = response?.tournaments || [];
+      });
+
     this.formTournam.reset();
   }
 

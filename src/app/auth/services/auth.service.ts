@@ -11,6 +11,21 @@ export class AuthService {
   private user?: User;
 
   constructor(private http: HttpClient) { }
+  public userId: string = '';
+
+  setUserId(userId: string) {
+    this.userId = userId;
+  }
+
+  getUserId(): string | null {
+    const token = localStorage.getItem('token');
+    if (token) {
+      // Decodifica el token JWT para obtener el ID del usuario
+      const tokenPayload = JSON.parse(atob(token.split('.')[1]));
+      return tokenPayload.id;
+    }
+    return null;
+  }
 
   get currentUser(): User | undefined {
     if (!this.user) return undefined;
@@ -38,7 +53,6 @@ export class AuthService {
 
   checkAuthentication(): Observable<boolean> {
     if (!localStorage.getItem('token')) return of(false);
-    const token = localStorage.getItem('token');
     return this.http.get<User>(`${this.baseUrl}/auth/`)
       .pipe(
         tap(user => this.user = user),
@@ -50,6 +64,11 @@ export class AuthService {
   logout() {
     this.user = undefined;
     localStorage.clear();
+  }
+
+  getUserById(id: string): Observable<User | undefined> {
+    return this.http.get<User>(`${this.baseUrl}/auth/${id}`)
+      .pipe(catchError(e => of(undefined)));
   }
 
 }
