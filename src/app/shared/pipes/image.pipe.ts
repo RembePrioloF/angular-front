@@ -7,9 +7,9 @@ import { Team } from 'src/app/tournaments/interfaces/team.interfece';
 export class ImagePipe implements PipeTransform {
 
   transform(team: Team): string {
-    if (!team.logo) return 'assets/logo.png';
+    if (!team.logo) return 'assets/logoTorneo.png';
     if (team.logo) return team.logo;
-    return `assets/logoTorneo.png`
+    return `assets/logo.png`
   }
 
 }

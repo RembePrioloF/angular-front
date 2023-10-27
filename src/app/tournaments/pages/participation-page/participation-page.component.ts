@@ -1,8 +1,11 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
+import { Player } from '../../interfaces/player.interfece';
 import { Team } from '../../interfaces/team.interfece';
+import { PlayerService } from '../../services/player.service';
 import { TeamService } from '../../services/team.service';
 import { TournamentService } from '../../services/tournament.service';
 
@@ -14,12 +17,17 @@ import { TournamentService } from '../../services/tournament.service';
 export class ParticipationPageComponent implements OnInit {
 
   tournamId: string = '';
+  teamId: string = '';
   public teams: Team[] = [];
+  public players: Player[] = [];
+  public positions: string[] = [];
 
   constructor(
-    private teamService: TeamService,
     private tournamService: TournamentService,
+    private teamService: TeamService,
+    private playerService: PlayerService,
     private route: ActivatedRoute,
+    private http: HttpClient,
   ) { }
 
   public formTeam = new FormGroup({
@@ -28,13 +36,33 @@ export class ParticipationPageComponent implements OnInit {
     logo: new FormControl('', []),
   });
 
+  public formPlayer = new FormGroup({
+    name: new FormControl<string>('', [Validators.required]),
+    birthDate: new FormControl('', [Validators.required]),
+    playerNumber: new FormControl(0, [Validators.required]),
+    position: new FormControl('', [Validators.required]),
+    email: new FormControl('', [Validators.required]),
+    isCaptain: new FormControl(false, []),
+  });
+
   get currentTeam(): Team {
     const team = this.formTeam.value as Team;
     team.tournam = this.tournamId;
     return team;
   }
 
+  get currentPlayer(): Player {
+    const player = this.formPlayer.value as Player;
+    player.team = this.teamId;
+    return player;
+  }
+
   ngOnInit(): void {
+    // Llama a la API para obtener los valores del enum
+    this.http.get<string[]>('http://localhost:3000/player/positions').subscribe((data) => {
+      this.positions = data;
+    });
+
     this.route.params.subscribe(params => {
       this.tournamId = params['id'];
       this.tournamService.getTournamentById(this.tournamId)
@@ -43,10 +71,16 @@ export class ParticipationPageComponent implements OnInit {
         });
     });
 
+    this.playerService.getPlayer()
+      .subscribe((response) => {
+        this.players;
+      });
+
     this.formTeam.reset();
+    this.formPlayer.reset();
   }
 
-  onSubmit() {
+  addTeam() {
     if (this.formTeam.invalid) {
       this.formTeam.markAllAsTouched();
       return;
@@ -63,13 +97,56 @@ export class ParticipationPageComponent implements OnInit {
       });
   }
 
+  addPlayers() {
+    if (this.formPlayer.invalid) {
+      this.formPlayer.markAllAsTouched();
+      return;
+    }
+    if (!this.formPlayer.value.isCaptain) {
+      this.formPlayer.value.isCaptain = false
+    }
+    this.playerService.createPlayer(this.currentPlayer)
+      .subscribe({
+        next: (response) => {
+          this.showSuccessNotification('Player created successfully! ' + response.name);
+          this.ngOnInit();
+        },
+        error: (error) => {
+          console.log(error);
+          this.showErrorNotification('An error occurred while creating the player. ' + error.error.message);
+        }
+      });
+  }
+
+  openPlayer(id: string) {
+    this.teamId = id;
+    this.teamService.getTeamById(id)
+      .subscribe((response) => {
+        this.players = response?.players || [];
+      });
+  }
+
   editTeam() {
     console.log('clic');
   }
 
-  isInvalid(fieldName: string): boolean {
+  isInvalidTeam(fieldName: string): boolean {
     const control = this.formTeam.get(fieldName) as FormControl;
     return control.invalid && control.touched;
+  }
+
+  isInvalidPlayer(fieldName: string): boolean {
+    const control = this.formPlayer.get(fieldName) as FormControl;
+    return control.invalid && control.touched;
+  }
+
+  private showSuccessNotification(message: string) {
+    Swal.fire({
+      icon: 'success',
+      title: 'Success',
+      text: message,
+    });
+    this.ngOnInit();
   }
 
   private showErrorNotification(message: string) {

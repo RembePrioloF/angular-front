@@ -15,7 +15,8 @@ import { TournamentService } from '../../services/tournament.service';
 })
 export class TournamentPageComponent implements OnInit {
 
-  public league: string[] = [];
+  public leagues: string[] = [];
+  public locations: string[] = [];
   public tournaments: Tournament[] = [];
   id: string = '';
   startDateErrorMessage: string = '';
@@ -44,8 +45,11 @@ export class TournamentPageComponent implements OnInit {
 
   ngOnInit(): void {
     // Llama a la API para obtener los valores del enum
-    this.http.get<string[]>('http://localhost:3000/tournam/league').subscribe((data) => {
-      this.league = data;
+    this.http.get<string[]>('http://localhost:3000/tournam/leagues').subscribe((data) => {
+      this.leagues = data;
+    });
+    this.http.get<string[]>('http://localhost:3000/tournam/locations').subscribe((data) => {
+      this.locations = data;
     });
 
     this.id = this.authService.getUserId() as string;

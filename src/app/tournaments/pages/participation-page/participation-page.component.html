@@ -1,19 +1,19 @@
 <app-navbar></app-navbar>
 
-<div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel">
+<div class="modal fade" id="modalTeam" tabindex="-1" aria-labelledby="modalLabel" data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="myModalLabel">Nuevo Equipo</h1>
+        <h1 class="modal-title fs-5" id="modalLabel">Nuevo Equipo</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form [formGroup]="formTeam" (ngSubmit)="onSubmit()">
+        <form [formGroup]="formTeam" (ngSubmit)="addTeam()">
           <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Nombre</label>
             <input type="text" class="form-control" name="name" formControlName="name" placeholder="Nombre del Equipo"
               required>
-            <span *ngIf="isInvalid('name')" class="form-text text-danger">
+            <span *ngIf="isInvalidTeam('name')" class="form-text text-danger">
               Este dato es requerido
             </span>
           </div>
@@ -31,7 +31,108 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary me-auto" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary" (click)="onSubmit()">Crear</button>
+        <button type="button" class="btn btn-primary" (click)="addTeam()">Crear</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalPlayer" aria-hidden="true" tabindex="-1" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Lista de jugadores</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-striped table-hover text-center align-middle">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Nº Jugador</th>
+              <th scope="col">Cumpleaño</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let player of players; let i = index">
+              <th scope="row">{{ i + 1 }}</th>
+              <td>{{ player.name }}</td>
+              <td>{{ player.playerNumber }}</td>
+              <td>{{ player.birthDate }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary me-auto" data-bs-dismiss="modal">Cerrar</button>
+        <button class="btn btn-primary" data-bs-target="#modalPlayer2" data-bs-toggle="modal">
+          Agregar Jugadores
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="modalPlayer2" aria-hidden="true" tabindex="-1" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalToggleLabel2">Nuevo Jugador</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="formPlayer" (ngSubmit)="addPlayers()">
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Nombre</label>
+            <input type="text" class="form-control" name="name" formControlName="name" placeholder="Nombre del Equipo"
+              required>
+            <span *ngIf="isInvalidPlayer('name')" class="form-text text-danger">
+              Este dato es requerido
+            </span>
+          </div>
+          <div class="mb-3">
+            <label for="birthDate" class="col-form-label">Fecha de cumpleaño</label>
+            <input type="date" class="form-control" name="birthDate" formControlName="birthDate" required>
+            <span *ngIf="isInvalidPlayer('birthDate')" class="form-text text-danger">
+              Este dato es requerido
+            </span>
+          </div>
+          <div class="mb-3">
+            <label for="recipient-playerNumber" class="col-form-label">Numero del Jugador</label>
+            <input type="number" class="form-control" name="playerNumber" formControlName="playerNumber"
+              placeholder="Numero del Jugador" required>
+            <span *ngIf="isInvalidPlayer('playerNumber')" class="form-text text-danger">
+              Este dato es requerido
+            </span>
+          </div>
+          <div class="mb-3">
+            <label for="recipient-position" class="col-form-label">Pocisición del Jugador</label>
+            <select type="text" class="form-select" name="position" formControlName="position"
+              placeholder="Pocisición del Jugador" required>
+              <option *ngFor="let position of positions" [value]="position">{{ position }}</option>
+            </select>
+            <span *ngIf="isInvalidPlayer('position')" class="form-text text-danger">
+              Este dato es requerido
+            </span>
+          </div>
+          <div class="mb-3">
+            <label for="recipient-email" class="col-form-label">Correo del Jugador</label>
+            <input type="email" class="form-control" name="email" formControlName="email"
+              placeholder="Correo del Jugador" required>
+            <span *ngIf="isInvalidPlayer('email')" class="form-text text-danger">
+              Este dato es requerido
+            </span>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" value="" name="isCaptain" formControlName="isCaptain"
+              role="switch" id="flexSwitchCheckDefault">
+            <label class="form-check-label" for="flexSwitchCheckDefault">Eres el Capitan</label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary me-auto" data-bs-target="#modalPlayer" data-bs-toggle="modal">Cerrar</button>
+        <button type="button" class="btn btn-primary" (click)="addPlayers()">Crear</button>
       </div>
     </div>
   </div>
@@ -42,7 +143,7 @@
     <div class="mx-auto">
       <img src="../../../../assets/logoTorneo.png" height="100" class="mb-2" alt="logoTorneo">
       <h5>Crea los equipos que requieres para tu torneo</h5>
-      <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#myModal">
+      <button type="button" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#modalTeam">
         Crear Equipo
       </button>
     </div>
@@ -50,11 +151,11 @@
 </ng-template>
 
 <div *ngIf="teams.length > 0; else loadingTemplate">
-  <button type="button" class="btn btn-outline-dark ms-4 mb-4" data-bs-toggle="modal" data-bs-target="#myModal">
+  <button type="button" class="btn btn-outline-dark ms-4 mb-4" data-bs-toggle="modal" data-bs-target="#modalTeam">
     Crear Equipo
   </button>
 
-  <table class="table table-striped table-hover">
+  <table class="table table-striped table-hover text-center align-middle">
     <thead>
       <tr>
         <th scope="col">#</th>
@@ -68,16 +169,15 @@
       <tr *ngFor="let team of teams; let i = index">
         <th scope="row">{{ i + 1 }}</th>
         <td>{{ team.name }}</td>
-        <td><img [src]="team | image" alt="Logo del equipo" width="50" height="50"></td>
-        <td>jugadores</td>
-        <td>{{ team.coach }}</td>
-        <td>
-          <a class="icon-link icon-link-hover" style="--bs-icon-link-transform: translate3d(0, -.125rem, 0);" href="#">
-            <svg class="bi" aria-hidden="true"><use xlink:href="#clipboard"></use></svg>
-            Icon link
+        <td><img [src]="team | image" alt="Logo del equipo" width="40" height="40"></td>
+        <td><a class="btn position-relative" (click)="openPlayer(team.teamId)" data-bs-toggle="modal"
+            data-bs-target="#modalPlayer"><i class="fa-solid fa-user-plus fs-3"></i>
+            <!-- <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+              {{ i + 1 }}
+            </span> -->
           </a>
-          <button (click)="editTeam()">Editar</button>
         </td>
+        <td>{{ team.coach }}</td>
       </tr>
     </tbody>
   </table>

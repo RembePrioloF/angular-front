@@ -28,7 +28,7 @@
       </div>
       <div class="form-group">
         <label for="role">Rol de usuario</label>
-        <select class="form-control" formControlName="role" name="role" required>
+        <select class="form-select" formControlName="role" name="role" required>
           <option *ngFor="let userRole of roles" [value]="userRole">{{ userRole }}</option>
         </select>
         <span *ngIf="isInvalid('role')" class="form-text text-danger">

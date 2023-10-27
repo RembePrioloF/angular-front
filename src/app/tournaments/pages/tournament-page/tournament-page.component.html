@@ -1,7 +1,7 @@
 <div class="centenedor">
   <app-navbar></app-navbar>
 
-  <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel">
+  <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" data-bs-backdrop="static" >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -10,7 +10,7 @@
         </div>
         <div class="modal-body">
           <form [formGroup]="formTournam" (ngSubmit)="onSubmit()">
-            <div class="form-group">
+            <div class="form-group mb-3">
               <label for="name">Nombre del Torneo</label>
               <input type="text" class="form-control" name="name" formControlName="name"
                 placeholder="Ingrese el nombre del torneo" required>
@@ -18,7 +18,7 @@
                 Este dato es requerido
               </span>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
               <label for="startDate">Fecha de Inicio</label>
               <input type="date" class="form-control" name="startDate" formControlName="startDate" required>
               <div *ngIf="isInvalid('startDate')" class="form-text text-danger">
@@ -30,7 +30,7 @@
                 </ng-container>
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
               <label for="endDate">Fecha de Finalización <small class="text-secondary">(opcional)</small></label>
               <input type="date" class="form-control" name="endDate" formControlName="endDate">
               <div *ngIf="isInvalid('endDate')" class="form-text text-danger">
@@ -39,19 +39,21 @@
                 </ng-container>
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group mb-3">
               <label for="location">Ubicación</label>
-              <input type="text" class="form-control" name="location" formControlName="location"
+              <select type="text" class="form-select" name="location" formControlName="location"
                 placeholder="Ingrese la ubicación" required>
+                <option *ngFor="let location of locations" [value]="location">{{ location }}</option>
+              </select>
               <span *ngIf="isInvalid('location')" class="form-text text-danger">
                 Este dato es requerido
               </span>
             </div>
             <div class="form-group">
               <label for="league">Líga</label>
-              <select type="text" class="form-control" name="league" formControlName="league"
+              <select type="text" class="form-select" name="league" formControlName="league"
                 placeholder="Ingrese la liga de futbol" required>
-                <option *ngFor="let liga of league" [value]="liga">{{ liga }}</option>
+                <option *ngFor="let liga of leagues" [value]="liga">{{ liga }}</option>
               </select>
               <span *ngIf="isInvalid('league')" class="form-text text-danger">
                 Este dato es requerido
@@ -94,7 +96,6 @@
         </div>
       </div>
     </div>
-
   </div>
 
   <app-footer></app-footer>
