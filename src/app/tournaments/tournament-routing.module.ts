@@ -12,7 +12,7 @@ const routes: Routes = [
       { path: 'tournament', component: TournamentPageComponent },
       { path: 'participation/:id', component: ParticipationPageComponent },
       { path: 'matches', component: MatchesPageComponent },
-      { path: 'results', component: ResultsPageComponent },
+      { path: 'statistics', component: ResultsPageComponent },
       { path: '**', redirectTo: 'tournament' },
     ]
   }

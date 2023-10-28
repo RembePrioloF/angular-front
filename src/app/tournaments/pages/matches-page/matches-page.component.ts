@@ -9,17 +9,12 @@ import { Team } from '../../interfaces/team.interfece';
 })
 export class MatchesPageComponent implements OnInit {
 
-
   constructor(
     private http: HttpClient,
   ) { }
 
   ngOnInit(): void {
 
-  }
-
-  addTeam1() {
-    console.log('addTeam1');
   }
 
 }

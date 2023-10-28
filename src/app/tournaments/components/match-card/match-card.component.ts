@@ -9,7 +9,6 @@ import { HttpClient } from '@angular/common/http';
 })
 export class MatchCardComponent implements OnInit {
 
-  @Input()
   public teams: Team[] = [];
 
   constructor(
@@ -17,11 +16,7 @@ export class MatchCardComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // Llama a la API para obtener los valores del enum
-    this.http.get<Team[]>('http://localhost:3000/team').subscribe((data) => {
-      this.teams = data;
-      console.log(this.teams);
-    });
+
   }
 
   addTeamL() {

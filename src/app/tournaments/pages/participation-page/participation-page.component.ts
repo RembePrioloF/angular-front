@@ -68,12 +68,14 @@ export class ParticipationPageComponent implements OnInit {
       this.tournamService.getTournamentById(this.tournamId)
         .subscribe((response) => {
           this.teams = response?.teams || [];
+          this.teams.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+
         });
     });
 
-    this.playerService.getPlayer()
+    this.playerService.getPlayerById(this.teamId)
       .subscribe((response) => {
-        this.players;
+        this.openPlayer(this.teamId);
       });
 
     this.formTeam.reset();
@@ -109,7 +111,6 @@ export class ParticipationPageComponent implements OnInit {
       .subscribe({
         next: (response) => {
           this.showSuccessNotification('Player created successfully! ' + response.name);
-          this.ngOnInit();
         },
         error: (error) => {
           console.log(error);
@@ -123,6 +124,7 @@ export class ParticipationPageComponent implements OnInit {
     this.teamService.getTeamById(id)
       .subscribe((response) => {
         this.players = response?.players || [];
+        this.players.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
       });
   }
 

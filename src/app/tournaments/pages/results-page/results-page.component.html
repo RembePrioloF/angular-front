@@ -3,83 +3,97 @@
 
   <div class="container text-center d-flex align-items-center" style="height: 50vh;">
     <div class="row row-md-cols-2">
-      <div class="col">
-        <h5>Máximos Goleadores</h5>
+
+      <div class="col border border-success">
+        <h5><span class="badge rounded-pill text-bg-success">Máximos Goleadores</span></h5>
         <table class="table align-middle">
           <thead>
             <tr>
-              <th scope="col">Jugador</th>
+              <th scope="col">#</th>
               <th scope="col">Equipo</th>
+              <th scope="col">Jugador</th>
               <th scope="col">Goles</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th>i + 1</th>
-              <td>team.name</td>
-              <td>team.coach</td>
+            <tr *ngFor="let player of playerGoals; let i = index">
+              <th scope="row">{{i + 1}}</th>
+              <td>{{player.teamName}}</td>
+              <td>{{player.playerName}}</td>
+              <td>{{player.point}}</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div class="col">
-        <h5>Máximos Asistentes</h5>
+
+      <div class="col border border-danger">
+        <h5><span class="badge rounded-pill text-bg-danger">Máximas Tarjetas Rojas</span></h5>
         <table class="table align-middle">
           <thead>
             <tr>
-              <th scope="col">Jugador</th>
+              <th scope="col">#</th>
               <th scope="col">Equipo</th>
-              <th scope="col">Goles</th>
+              <th scope="col">Jugador</th>
+              <th scope="col">Tarjetas Rojas</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th>i + 1</th>
-              <td>team.name</td>
-              <td>team.coach</td>
+            <tr *ngFor="let player of redCard; let i = index">
+              <th scope="row">{{i + 1}}</th>
+              <td>{{player.teamName}}</td>
+              <td>{{player.playerName}}</td>
+              <td>{{player.point}}</td>
             </tr>
           </tbody>
         </table>
       </div>
+
       <div class="m-5"></div>
-      <div class="col">
-        <h5>Máximas Tarjetas Rojas</h5>
+
+      <div class="col border border-warning">
+        <h5><span class="badge rounded-pill text-bg-warning">Máximas Tarjetas Amarillas</span></h5>
         <table class="table align-middle">
           <thead>
             <tr>
-              <th scope="col">Jugador</th>
+              <th scope="col">#</th>
               <th scope="col">Equipo</th>
-              <th scope="col">Goles</th>
+              <th scope="col">Jugador</th>
+              <th scope="col">Tarjetas Amarillas</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th>i + 1</th>
-              <td>team.name</td>
-              <td>team.coach</td>
+            <tr *ngFor="let player of yellowCard; let i = index">
+              <th scope="row">{{i + 1}}</th>
+              <td>{{player.teamName}}</td>
+              <td>{{player.playerName}}</td>
+              <td>{{player.point}}</td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div class="col">
-        <h5>Máximas Tarjetas Amarillas</h5>
+
+      <div class="col border border-primary">
+        <h5><span class="badge rounded-pill text-bg-primary">Máximas Tarjetas Azules</span></h5>
         <table class="table align-middle">
           <thead>
             <tr>
-              <th scope="col">Jugador</th>
+              <th scope="col">#</th>
               <th scope="col">Equipo</th>
-              <th scope="col">Goles</th>
+              <th scope="col">Jugador</th>
+              <th scope="col">Asistentes</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th>i + 1</th>
-              <td>team.name</td>
-              <td>team.coach</td>
+            <tr *ngFor="let player of blueCard; let i = index">
+              <th scope="row">{{i + 1}}</th>
+              <td>{{player.teamName}}</td>
+              <td>{{player.playerName}}</td>
+              <td>{{player.point}}</td>
             </tr>
           </tbody>
         </table>
       </div>
+
     </div>
   </div>
 

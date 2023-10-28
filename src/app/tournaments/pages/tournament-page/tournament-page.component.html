@@ -1,7 +1,7 @@
 <div class="centenedor">
   <app-navbar></app-navbar>
 
-  <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" data-bs-backdrop="static" >
+  <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="myModalLabel" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
@@ -41,8 +41,7 @@
             </div>
             <div class="form-group mb-3">
               <label for="location">Ubicación</label>
-              <select type="text" class="form-select" name="location" formControlName="location"
-                placeholder="Ingrese la ubicación" required>
+              <select type="text" class="form-select" name="location" formControlName="location" required>
                 <option *ngFor="let location of locations" [value]="location">{{ location }}</option>
               </select>
               <span *ngIf="isInvalid('location')" class="form-text text-danger">
@@ -51,8 +50,7 @@
             </div>
             <div class="form-group">
               <label for="league">Líga</label>
-              <select type="text" class="form-select" name="league" formControlName="league"
-                placeholder="Ingrese la liga de futbol" required>
+              <select type="text" class="form-select" name="league" formControlName="league" required>
                 <option *ngFor="let liga of leagues" [value]="liga">{{ liga }}</option>
               </select>
               <span *ngIf="isInvalid('league')" class="form-text text-danger">

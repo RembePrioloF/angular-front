@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, of } from 'rxjs';
 import { environments } from '../../../environments/environments';
-import { Team } from '../interfaces/team.interfece';
 import { Player } from '../interfaces/player.interfece';
+import { PlayerInMatch } from '../interfaces/player-in-match.interfece';
 
 @Injectable({ providedIn: 'root' })
 export class PlayerService {
@@ -22,6 +22,11 @@ export class PlayerService {
 
   getPlayerById(id: string): Observable<Player | undefined> {
     return this.http.get<Player>(`${this.baseUrl}/player/${id}`)
+      .pipe(catchError(e => of(undefined)));
+  }
+
+  getPlayerInMatch(): Observable<PlayerInMatch | undefined> {
+    return this.http.get<PlayerInMatch>(`${this.baseUrl}/player_in_match`)
       .pipe(catchError(e => of(undefined)));
   }
 
