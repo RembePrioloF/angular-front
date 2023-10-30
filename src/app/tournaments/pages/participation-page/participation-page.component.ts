@@ -19,8 +19,9 @@ export class ParticipationPageComponent implements OnInit {
   tournamId: string = '';
   teamId: string = '';
   public teams: Team[] = [];
-  public players: Player[] = [];
   public positions: string[] = [];
+  public players: Player[] = [];
+  teamPlayersCount: { [teamId: string]: number } = {};
 
   constructor(
     private tournamService: TournamentService,
@@ -69,14 +70,15 @@ export class ParticipationPageComponent implements OnInit {
         .subscribe((response) => {
           this.teams = response?.teams || [];
           this.teams.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-
+          this.openPlayer(this.teamId);
+          this.teams.forEach((team) => {
+            this.teamService.getTeamById(team.teamId)
+              .subscribe((teamResponse) => {
+                this.teamPlayersCount[team.teamId] = teamResponse?.players.length || 0;
+              });
+          });
         });
     });
-
-    this.playerService.getPlayerById(this.teamId)
-      .subscribe((response) => {
-        this.openPlayer(this.teamId);
-      });
 
     this.formTeam.reset();
     this.formPlayer.reset();
@@ -125,6 +127,7 @@ export class ParticipationPageComponent implements OnInit {
       .subscribe((response) => {
         this.players = response?.players || [];
         this.players.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+        //console.log(response);
       });
   }
 

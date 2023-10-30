@@ -172,9 +172,10 @@
         <td><img [src]="team | image" alt="Logo del equipo" width="40" height="40"></td>
         <td><a class="btn position-relative" (click)="openPlayer(team.teamId)" data-bs-toggle="modal"
             data-bs-target="#modalPlayer"><i class="fa-solid fa-user-plus fs-3"></i>
-            <!-- <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-              {{ i + 1 }}
-            </span> -->
+            <span *ngIf="true"
+              class="badge rounded-pill text-bg-dark position-absolute top-0 start-100 translate-middle">
+              {{ teamPlayersCount[team.teamId] }}
+            </span>
           </a>
         </td>
         <td>{{ team.coach }}</td>
