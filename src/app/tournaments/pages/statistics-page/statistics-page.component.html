@@ -1,12 +1,23 @@
-<div class="centenedor">
+<div class="centenedor" style="text-align: center;">
   <app-navbar></app-navbar>
 
-  <div class="container text-center d-flex align-items-center" style="height: 50vh;">
-    <div class="row row-md-cols-2">
+  <div class="container">
+    <div class="row mb-4 justify-content-end">
+      <div class="col-md-4">
+        <h3>Estadísticas del Jugador</h3>
+      </div>
+      <div class="col-md-4">
+        <button class="btn btn-outline-secondary btn-sm" (click)="sendEmail()">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+          Enviar estadísticas por correo
+        </button>
+      </div>
+    </div>
 
-      <div class="col border border-success">
-        <h5><span class="badge rounded-pill text-bg-success">Máximos Goleadores</span></h5>
-        <table class="table align-middle">
+    <div class="row" style="margin-bottom: 1rem;">
+      <div class="col me-md-2 mb-md-0" style="border: 1px solid #198753;margin-bottom: 1rem;">
+        <h3 style="color: #198753;">Máximos Goleadores</h3>
+        <table class="table" style="width: 100%;">
           <thead>
             <tr>
               <th scope="col">#</th>
@@ -26,9 +37,9 @@
         </table>
       </div>
 
-      <div class="col border border-danger">
-        <h5><span class="badge rounded-pill text-bg-danger">Máximas Tarjetas Rojas</span></h5>
-        <table class="table align-middle">
+      <div class="col" style="border: 1px solid #dd3444;">
+        <h3 style="color: #dd3444;">Máximas Tarjetas Rojas</h3>
+        <table class="table" style="width: 100%;">
           <thead>
             <tr>
               <th scope="col">#</th>
@@ -47,12 +58,12 @@
           </tbody>
         </table>
       </div>
+    </div>
 
-      <div class="m-5"></div>
-
-      <div class="col border border-warning">
-        <h5><span class="badge rounded-pill text-bg-warning">Máximas Tarjetas Amarillas</span></h5>
-        <table class="table align-middle">
+    <div class="row">
+      <div class="col me-md-2 mb-md-0" style="border: 1px solid #ffc106;margin-bottom: 1rem;">
+        <h3 style="color: #ffc106;">Máximas Tarjetas Amarillas</h3>
+        <table class="table" style="width: 100%;">
           <thead>
             <tr>
               <th scope="col">#</th>
@@ -72,9 +83,9 @@
         </table>
       </div>
 
-      <div class="col border border-primary">
-        <h5><span class="badge rounded-pill text-bg-primary">Máximas Tarjetas Azules</span></h5>
-        <table class="table align-middle">
+      <div class="col" style="border: 1px solid #0d6efd;">
+        <h3 style="color: #0d6efd;">Máximas Tarjetas Azules</h3>
+        <table class="table" style="width: 100%;">
           <thead>
             <tr>
               <th scope="col">#</th>
@@ -93,7 +104,6 @@
           </tbody>
         </table>
       </div>
-
     </div>
   </div>
 

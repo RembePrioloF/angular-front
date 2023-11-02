@@ -112,11 +112,11 @@ export class ParticipationPageComponent implements OnInit {
     this.playerService.createPlayer(this.currentPlayer)
       .subscribe({
         next: (response) => {
-          this.showSuccessNotification('Player created successfully! ' + response.name);
+          this.showSuccessNotification('Jugador creado con éxito! ' + response.name);
         },
         error: (error) => {
           console.log(error);
-          this.showErrorNotification('An error occurred while creating the player. ' + error.error.message);
+          this.showErrorNotification('Ocurrió un error al crear ' + error.error.message);
         }
       });
   }

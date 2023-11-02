@@ -72,12 +72,12 @@ export class TournamentPageComponent implements OnInit {
     this.tournamentService.createTournament(this.currentTournam)
       .subscribe({
         next: (response) => {
-          this.showSuccessNotification('Tournament created successfully! ' + response.name);
+          this.showSuccessNotification('Torneo creado con éxito! ' + response.name);
           this.ngOnInit();
         },
         error: (error) => {
           console.log(error);
-          this.showErrorNotification('An error occurred while creating the tournament. ' + error.error.message);
+          this.showErrorNotification('Ocurrió un error al crear . ' + error.error.message);
         }
       });
   }

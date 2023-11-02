@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ParticipationPageComponent } from './pages/participation-page/participation-page.component';
-import { TournamentPageComponent } from './pages/tournament-page/tournament-page.component';
 import { MatchesPageComponent } from './pages/matches-page/matches-page.component';
-import { ResultsPageComponent } from './pages/results-page/results-page.component';
+import { ParticipationPageComponent } from './pages/participation-page/participation-page.component';
+import { StatisticsPageComponent } from './pages/statistics-page/statistics-page.component';
+import { TournamentPageComponent } from './pages/tournament-page/tournament-page.component';
 
 const routes: Routes = [
   {
@@ -12,7 +12,7 @@ const routes: Routes = [
       { path: 'tournament', component: TournamentPageComponent },
       { path: 'participation/:id', component: ParticipationPageComponent },
       { path: 'matches', component: MatchesPageComponent },
-      { path: 'statistics', component: ResultsPageComponent },
+      { path: 'statistics', component: StatisticsPageComponent },
       { path: '**', redirectTo: 'tournament' },
     ]
   }
