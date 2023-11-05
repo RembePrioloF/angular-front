@@ -1,34 +1,33 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Team } from '../../interfaces/team.interfece';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'match-card',
   templateUrl: './match-card.component.html',
   styleUrls: ['./match-card.component.css']
 })
-export class MatchCardComponent implements OnInit {
+export class MatchCardComponent {
 
-  public teams: Team[] = [];
+  @Input() teams: Team[] = [];
+  selectedMatchups: any[] = [];
 
-  constructor(
-    private http: HttpClient,
-  ) { }
+  constructor() { }
 
-  ngOnInit(): void {
-
+  createMatchups() {
+    const matchups = [];
+    for (let i = 0; i < 8; i += 2) {
+      const team1 = this.teams[i];
+      const team2 = this.teams[i + 1];
+      matchups.push({ team1, team2 });
+    }
+    return matchups;
   }
 
-  addTeamL() {
-    console.log('addTeamL');
-  }
-
-  addTeamV() {
-    console.log('addTeamV');
-  }
-
-  onCellClick(team: Team) {
-    console.log(team.name);
+  openMatch(i: number) {
+    const matchups = this.createMatchups();
+    if (i >= 0 && i < matchups.length) {
+      this.selectedMatchups = [matchups[i]];
+    }
   }
 
 }

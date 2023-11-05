@@ -116,7 +116,7 @@ export class ParticipationPageComponent implements OnInit {
         },
         error: (error) => {
           console.log(error);
-          this.showErrorNotification('Ocurrió un error al crear ' + error.error.message);
+          this.showErrorNotification('' + error.error.message);
         }
       });
   }
@@ -127,7 +127,6 @@ export class ParticipationPageComponent implements OnInit {
       .subscribe((response) => {
         this.players = response?.players || [];
         this.players.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-        //console.log(response);
       });
   }
 

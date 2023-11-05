@@ -1,5 +1,20 @@
-.centenedor {
+.contenedor {
   position: relative;
   min-height: 100vh;
   padding-bottom: 300px;
+}
+.card-header {
+  padding: 0;
+}
+.card-body {
+  padding: 0;
+}
+.table {
+  margin-bottom: 3px;
+}
+@media (max-width: 768px) {
+  .container {
+    height: 100vh;
+    margin-bottom: 150px;
+  }
 }

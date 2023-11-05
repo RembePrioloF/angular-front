@@ -4,12 +4,12 @@
       <a class="navbar-brand" routerLink="/tournaments/tournament">
         <img src="../../../../assets/logo.png" alt="Logo" height="50" class="d-inline-block align-text-top">
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-collapse"
+        aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      <div class="collapse navbar-collapse" id="navbar-collapse">
+        <ul class="nav navbar-nav ml-auto w-100">
           <li class="nav-item">
             <a class="nav-link" routerLink="/tournaments/tournament" routerLinkActive="active">Torneos</a>
           </li>
@@ -19,8 +19,23 @@
           <li class="nav-item">
             <a class="nav-link" routerLink="/tournaments/statistics" routerLinkActive="active">Estadísticas</a>
           </li>
+          <li class="nav-item mx-auto me-1">
+            <div class="dropstart">
+              <button type="button" class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <i class="fa-solid fa-user-gear"></i>
+              </button>
+              <ul class="dropdown-menu">
+                <li><span class="ms-3">{{name}}</span></li>
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+                <li><a class="dropdown-item" (click)="onEdit()">Editar Perfíl</a></li>
+                <li><a class="dropdown-item" (click)="onLogout()">Logout</a></li>
+              </ul>
+            </div>
+          </li>
         </ul>
-        <button class="btn btn-outline-light btn-sm m-2" (click)="onLogout()">Logout</button>
       </div>
     </div>
   </nav>
