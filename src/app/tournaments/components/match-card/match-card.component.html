@@ -5,9 +5,16 @@
         <p class="m-0 fw-bold">Partido {{ i + 1 }}</p>
       </div>
       <div class="col-3 col-md-5 d-md-flex justify-content-end">
-        <a class="btn" data-bs-toggle="modal" (click)="openMatch(i)" data-bs-target="#editMatch">
+        <button *ngIf="!isMatchCreated[i]; else eventButton" class="btn" data-bs-toggle="modal" (click)="openMatch(i)"
+          data-bs-target="#openMatch">
           <i class="fa-solid fa-pen-to-square fs-5"></i>
-        </a>
+        </button>
+        <ng-template #eventButton>
+          <button class="btn bg-success-subtle p-0 m-2" data-bs-toggle="modal" (click)="openEvent(i)"
+            data-bs-target="#openEvent">
+            <i class="fa-solid fa-pen-to-square fs-5"></i>Eventos
+          </button>
+        </ng-template>
       </div>
     </div>
   </div>
@@ -30,41 +37,53 @@
   </div>
 </div>
 
-<div class="modal fade" id="editMatch" data-bs-backdrop="static">
+<div class="modal fade" id="openMatch" data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Editar Resultado</h1>
+        <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Crear el partido {{ index + 1 }}</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body text-center">
-        <form>
-          <div *ngFor="let selectedMatchup of selectedMatchups" class="row align-items-center mb-4">
-            <div class="col-3">
-              <img src="../../../../assets/teams/logo3.png" width="40" alt="logoTorneo">
+      <div class="modal-body">
+        <form [formGroup]="formMatch" (ngSubmit)="addMatch()">
+          <div *ngFor="let selectedMatchup of selectedMatchups; let i = index" class="row text-center mb-4 bg-secondary-subtle">
+            <div class="col-5 p-0">
+              <img class="mt-2" src="../../../../assets/teams/logo3.png" width="40" alt="logoTorneo">
+              <h4 for="recipient-name">
+                {{selectedMatchup.team1 ? selectedMatchup.team1.name : 'Equipo sin definir'}} </h4>
             </div>
-            <label for="recipient-name" class="col-6 col-form-label">
-              {{selectedMatchup.team1 ? selectedMatchup.team1.name : 'Equipo sin definir'}}
-            </label>
-            <div class="col-2">
-              <input type="number" class="form-control" name="name" placeholder="0" required>
+            <h2 class="col-1 fw-bold my-auto">VS</h2>
+            <div class="col-5 p-0">
+              <img class="mt-2" src="../../../../assets/teams/logo4.png" width="40" alt="logoTorneo">
+              <h4 for="recipient-name">
+                {{selectedMatchup.team2 ? selectedMatchup.team2.name : 'Equipo sin definir'}} </h4>
             </div>
           </div>
-          <div *ngFor="let selectedMatchup of selectedMatchups" class="row align-items-center mb-4">
-            <div class="col-3">
-              <img src="../../../../assets/teams/logo4.png" width="40" alt="logoTorneo">
-            </div>
-            <label for="recipient-name" class="col-6 col-form-label">
-              {{selectedMatchup.team2 ? selectedMatchup.team2.name : 'Equipo sin definir'}}
-            </label>
-            <div class="col-2">
-              <input type="number" class="form-control" name="name" placeholder="0" required>
-            </div>
+          <div class="form-group mb-3">
+            <label for="dateMatch">Fecha del partido</label>
+            <input type="datetime-local" class="form-control" formControlName="dateMatch" name="dateMatch"
+              aria-describedby="addon-wrapping" required>
+            <span *ngIf="isInvalid('dateMatch')" class="form-text text-danger">
+              Este dato es requerido
+            </span>
+          </div>
+          <div class="form-group mb-3">
+            <label for="field">Ubicación del partido</label>
+            <input type="text" class="form-control" name="field" formControlName="field"
+              placeholder="Ingrese la ubicación del partido" required>
+            <span *ngIf="isInvalid('dateMatch')" class="form-text text-danger">
+              Este dato es requerido
+            </span>
+          </div>
+          <div class="form-group mb-3">
+            <label for="referee">Árbitro</label>
+            <input type="text" class="form-control" name="referee" formControlName="referee"
+              placeholder="Ingrese el nombre del Árbitro (opcional)">
           </div>
         </form>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary me-auto" data-bs-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-primary w-50">Guardar</button>
+          <button type="button" class="btn btn-primary w-50" (click)="addMatch()">Guardar</button>
         </div>
       </div>
     </div>
