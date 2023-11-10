@@ -84,7 +84,6 @@ export class TournamentPageComponent implements OnInit {
 
   onParticipation(tournamId: string) {
     this.router.navigate(['/tournaments/participation', tournamId]);
-
   }
 
   isInvalid(fieldName: string): boolean {

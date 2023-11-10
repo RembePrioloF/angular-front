@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { PlayerService } from '../../services/player.service';
+import { TournamentService } from '../../services/tournament.service';
 
 interface PlayerEvent {
   playerId: string;
@@ -16,8 +18,9 @@ interface PlayerEvent {
   styleUrls: ['./statistics-page.component.css']
 })
 export class StatisticsPageComponent implements OnInit {
-  isLoading = false;
 
+  isLoading = false;
+  tournamId: string = '';
   playerGoals: PlayerEvent[] = [];
   redCard: PlayerEvent[] = [];
   yellowCard: PlayerEvent[] = [];
@@ -27,15 +30,24 @@ export class StatisticsPageComponent implements OnInit {
     private playerService: PlayerService,
     private http: HttpClient,
     private elementRef: ElementRef,
+    private route: ActivatedRoute,
+    private tournamService: TournamentService,
   ) { }
 
   ngOnInit(): void {
-    this.playerService.getPlayerInMatch()
-      .subscribe((response) => {
-        if (Array.isArray(response)) {
-          response.forEach(item => { this.handleEvent(item); });
-        }
-      });
+    this.route.params.subscribe(params => {
+      this.tournamId = params['id'];
+      this.tournamService.getTournamentById(this.tournamId)
+        .subscribe((response) => {
+          this.playerService.getPlayerInMatch()
+            .subscribe((response) => {
+              if (Array.isArray(response)) {
+                response.forEach(item => { this.handleEvent(item); });
+              }
+            });
+
+        });
+    });
 
   }
 

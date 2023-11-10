@@ -46,7 +46,7 @@
       </div>
       <div class="modal-body">
         <form [formGroup]="formMatch" (ngSubmit)="addMatch()">
-          <div *ngFor="let selectedMatchup of selectedMatchups; let i = index" class="row text-center mb-4 bg-secondary-subtle">
+          <div *ngFor="let selectedMatchup of selectedMatchups" class="row text-center mb-4 bg-secondary-subtle">
             <div class="col-5 p-0">
               <img class="mt-2" src="../../../../assets/teams/logo3.png" width="40" alt="logoTorneo">
               <h4 for="recipient-name">
@@ -63,7 +63,7 @@
             <label for="dateMatch">Fecha del partido</label>
             <input type="datetime-local" class="form-control" formControlName="dateMatch" name="dateMatch"
               aria-describedby="addon-wrapping" required>
-            <span *ngIf="isInvalid('dateMatch')" class="form-text text-danger">
+            <span *ngIf="isInvalidFormMatch('dateMatch')" class="form-text text-danger">
               Este dato es requerido
             </span>
           </div>
@@ -71,7 +71,7 @@
             <label for="field">Ubicación del partido</label>
             <input type="text" class="form-control" name="field" formControlName="field"
               placeholder="Ingrese la ubicación del partido" required>
-            <span *ngIf="isInvalid('dateMatch')" class="form-text text-danger">
+            <span *ngIf="isInvalidFormMatch('dateMatch')" class="form-text text-danger">
               Este dato es requerido
             </span>
           </div>
@@ -84,6 +84,77 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary me-auto" data-bs-dismiss="modal">Cerrar</button>
           <button type="button" class="btn btn-primary w-50" (click)="addMatch()">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="openEvent" data-bs-backdrop="static">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Crear Eventos del partido {{ index + 1 }}</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="formEvent" (ngSubmit)="addEvent()">
+          <div *ngFor="let selectedMatchup of selectedMatchups" class="row text-center mb-4 bg-secondary-subtle">
+            <div class="col-5 p-0">
+              <img class="mt-2" src="../../../../assets/teams/logo3.png" width="40" alt="logoTorneo">
+              <h4>
+                {{selectedMatchup.team1 ? selectedMatchup.team1.name : 'Equipo sin definir'}} </h4>
+            </div>
+            <h2 class="col-1 fw-bold m-auto">VS</h2>
+            <div class="col-5 p-0">
+              <img class="mt-2" src="../../../../assets/teams/logo4.png" width="40" alt="logoTorneo">
+              <h4>
+                {{selectedMatchup.team2 ? selectedMatchup.team2.name : 'Equipo sin definir'}} </h4>
+            </div>
+          </div>
+          <div class="container text-center">
+            <div class="row align-items-start">
+              <div class="col">
+                <div class="form-group mb-3">
+                  <label for="player">Jugador</label>
+                  <select type="text" class="form-select" name="player" formControlName="player" required>
+                    <option *ngFor="let player of playersTeam1" [value]="player.playerId">{{ player.name }}</option>
+                  </select>
+                </div>
+                <div class="form-group mb-3">
+                  <label for="matchEvent">Tipo de Evento</label>
+                  <select type="text" class="form-select" name="matchEvent" formControlName="matchEvent" required>
+                    <option *ngFor="let matchEvent of matchEvents" [value]="matchEvent">{{ matchEvent }}</option>
+                  </select>
+                  <span *ngIf="isInvalidformEvent('matchEvent')" class="form-text text-danger">
+                    Este dato es requerido
+                  </span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="form-group mb-3">
+                  <label for="player">Jugador</label>
+                  <select type="text" class="form-select" name="player" formControlName="player" required>
+                    <option *ngFor="let player of playersTeam2" [value]="player.playerId">{{ player.name }}</option>
+                  </select>
+                </div>
+                <div class="form-group mb-3">
+                  <label for="matchEvent">Tipo de Evento</label>
+                  <select type="text" class="form-select" name="matchEvent" formControlName="matchEvent" required>
+                    <option *ngFor="let matchEvent of matchEvents" [value]="matchEvent">
+                      {{ matchEvent }}</option>
+                  </select>
+                  <span *ngIf="isInvalidformEvent('matchEvent')" class="form-text text-danger">
+                    Este dato es requerido
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary me-auto" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary w-50" (click)="addEvent()">Guardar</button>
         </div>
       </div>
     </div>

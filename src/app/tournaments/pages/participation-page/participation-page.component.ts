@@ -66,18 +66,16 @@ export class ParticipationPageComponent implements OnInit {
 
     this.route.params.subscribe(params => {
       this.tournamId = params['id'];
-      this.tournamService.getTournamentById(this.tournamId)
-        .subscribe((response) => {
-          this.teams = response?.teams || [];
-          this.teams.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-          this.openPlayer(this.teamId);
-          this.teams.forEach((team) => {
-            this.teamService.getTeamById(team.teamId)
-              .subscribe((teamResponse) => {
-                this.teamPlayersCount[team.teamId] = teamResponse?.players.length || 0;
-              });
+      this.tournamService.getTournamentById(this.tournamId).subscribe((response) => {
+        this.teams = response?.teams || [];
+        this.teams.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+        this.openPlayer(this.teamId);
+        this.teams.forEach((team) => {
+          this.teamService.getTeamById(team.teamId).subscribe((teamResponse) => {
+            this.teamPlayersCount[team.teamId] = teamResponse?.players.length || 0;
           });
         });
+      });
     });
 
     this.formTeam.reset();
@@ -96,7 +94,7 @@ export class ParticipationPageComponent implements OnInit {
         },
         error: (error) => {
           console.log(error);
-          this.showErrorNotification('An error occurred while creating the team. ' + error.error.message);
+          this.showErrorNotification('' + error.error.message);
         }
       });
   }

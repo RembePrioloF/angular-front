@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Team } from '../../interfaces/team.interfece';
-import { TeamService } from '../../services/team.service';
+import { TournamentService } from '../../services/tournament.service';
 
 @Component({
   selector: 'app-matches-page',
@@ -11,18 +11,22 @@ import { TeamService } from '../../services/team.service';
 export class MatchesPageComponent implements OnInit {
 
   teams: Team[] = [];
+  tournamId: string = '';
   selectedTeams: any[] = [];
 
   constructor(
-    private http: HttpClient,
-    private teamService: TeamService,
+    private route: ActivatedRoute,
+    private tournamentService: TournamentService,
   ) { }
 
   ngOnInit(): void {
-    this.teamService.getTeam()
-      .subscribe((teamResponse) => {
-        this.teams = teamResponse;
-      });
+    this.route.params.subscribe(params => {
+      this.tournamId = params['id'];
+      this.tournamentService.getTournamentById(this.tournamId)
+        .subscribe((teamResponse) => {
+          this.teams = teamResponse?.teams || [];
+        });
+    });
   }
 
   editTeam(match: any) {

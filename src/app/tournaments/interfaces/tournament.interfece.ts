@@ -1,3 +1,4 @@
+import { Match } from "./match.interfece";
 import { Team } from "./team.interfece";
 
 export interface Tournament {
@@ -11,6 +12,6 @@ export interface Tournament {
   createdAt:      string;
   updatedAt:      string;
   deleteAt:       null;
-  participations: any[];
+  matchs:         Match[];
   teams:          Team[];
 }

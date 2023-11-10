@@ -5,6 +5,7 @@ export interface Match {
   dateMatch:    string;
   field:        string;
   referee:      string;
+  tournam:      string;
   localTeam:    string;
   visitingTeam: string;
 }

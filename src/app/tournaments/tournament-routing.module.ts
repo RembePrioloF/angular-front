@@ -11,8 +11,8 @@ const routes: Routes = [
     children: [
       { path: 'tournament', component: TournamentPageComponent },
       { path: 'participation/:id', component: ParticipationPageComponent },
-      { path: 'matches', component: MatchesPageComponent },
-      { path: 'statistics', component: StatisticsPageComponent },
+      { path: ':id/matches', component: MatchesPageComponent },
+      { path: ':id/statistics', component: StatisticsPageComponent },
       { path: '**', redirectTo: 'tournament' },
     ]
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth/services/auth.service';
 
@@ -11,6 +11,7 @@ export class NavbarComponent implements OnInit {
 
   id: string = '';
   name: string = '';
+  @Input() tournamIdInput: string = '';
 
   constructor(
     private authService: AuthService,
@@ -25,7 +26,8 @@ export class NavbarComponent implements OnInit {
       });
   }
 
-  onEdit(){
+
+  onEdit() {
     console.log('click');
 
   }

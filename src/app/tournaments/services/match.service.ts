@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable, catchError, of } from 'rxjs';
 import { environments } from '../../../environments/environments';
 import { Match } from '../interfaces/match.interfece';
-import { Tournament } from '../interfaces/tournament.interfece';
 
 @Injectable({ providedIn: 'root' })
 export class MatchService {
@@ -20,8 +19,8 @@ export class MatchService {
     return this.http.get<Match[]>(`${this.baseUrl}/match`)
   }
 
-  getTournamentById(id: string): Observable<Tournament | undefined> {
-    return this.http.get<Tournament>(`${this.baseUrl}/tournam/${id}`)
+  getMatchById(id: string): Observable<Match[] | undefined> {
+    return this.http.get<Match[]>(`${this.baseUrl}/match/${id}`)
       .pipe(catchError(e => of(undefined)));
   }
 
