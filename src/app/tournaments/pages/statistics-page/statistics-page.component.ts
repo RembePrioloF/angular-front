@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
-import { PlayerService } from '../../services/player.service';
+import { PlayerInMatch } from '../../interfaces/player-in-match.interfece';
 import { TournamentService } from '../../services/tournament.service';
 
 interface PlayerEvent {
@@ -25,9 +25,9 @@ export class StatisticsPageComponent implements OnInit {
   redCard: PlayerEvent[] = [];
   yellowCard: PlayerEvent[] = [];
   blueCard: PlayerEvent[] = [];
+  playerInMatches: PlayerInMatch[] = [];
 
   constructor(
-    private playerService: PlayerService,
     private http: HttpClient,
     private elementRef: ElementRef,
     private route: ActivatedRoute,
@@ -37,18 +37,16 @@ export class StatisticsPageComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.tournamId = params['id'];
-      this.tournamService.getTournamentById(this.tournamId)
-        .subscribe((response) => {
-          this.playerService.getPlayerInMatch()
-            .subscribe((response) => {
-              if (Array.isArray(response)) {
-                response.forEach(item => { this.handleEvent(item); });
-              }
-            });
-
-        });
+      this.fetchTournamentData(this.tournamId);
     });
+  }
 
+  fetchTournamentData(tournamId: string): void {
+    this.tournamService.getTournamentById(tournamId).subscribe((response) => {
+      if (Array.isArray(response?.playerInMatches)) {
+        response?.playerInMatches.forEach(item => { this.handleEvent(item); });
+      }
+    });
   }
 
   handleEvent(item: any) {
@@ -74,6 +72,7 @@ export class StatisticsPageComponent implements OnInit {
     if (playerIndex !== -1) {
       eventArray[playerIndex].point += item.point;
     } else {
+      console.log(eventArray);
       eventArray.push({
         playerId,
         playerName: item.player.name,

@@ -5,10 +5,14 @@
     </div>
     <div class="col-8 p-0">
       <div class="card-body p-1">
-        <h6 class="card-title crop-text mb-4 mb-md-0">{{tournament.name}}</h6>
+        <h5 class="card-title crop-text ">{{tournament.name}}</h5>
+        <h6 class="card-title crop-text m-0">{{tournament.location}}</h6>
+        <div class="position-absolute bottom-0 end-0">
+          <small class="card-title crop-text p-1">{{tournament.league}}</small>
+        </div>
         <div class="position-absolute bottom-0 end-0">
           <p class="card-text me-1"><small class="text-body-secondary">
-              Creado: {{tournament.createdAt | date:'dd MMMM yyyy'}}</small></p>
+              Inicio: {{tournament.startDate | date:'dd MMMM yyyy'}}</small></p>
         </div>
       </div>
     </div>

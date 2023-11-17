@@ -15,6 +15,10 @@
           </li>
           <ng-container *ngIf="tournamIdInput">
             <li class="nav-item">
+              <a class="nav-link" [routerLink]="'/tournaments/participation/' + tournamIdInput"
+                routerLinkActive="active">Participantes</a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" [routerLink]="'/tournaments/' + tournamIdInput + '/matches'"
                 routerLinkActive="active">Partidos</a>
             </li>

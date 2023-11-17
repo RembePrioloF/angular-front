@@ -24,13 +24,23 @@
       <tbody>
         <tr>
           <td><img src="../../../../assets/teams/logo3.png" width="40" alt="logoTorneo"></td>
-          <td>{{matchup.team1 ? matchup.team1.name : 'Equipo sin definir'}}</td>
-          <td>2</td>
+          <td>{{ matchup.team1 ? matchup.team1.name : 'Equipo sin definir' }}</td>
+          <ng-container *ngIf="matchup.team1; else noTeam1Goals">
+            <td *ngFor="let player of getPlayerGoals(matchup.team1.teamId)">{{ player.point }}</td>
+          </ng-container>
+          <ng-template #noTeam1Goals>
+            <td>0</td>
+          </ng-template>
         </tr>
         <tr>
           <td><img src="../../../../assets/teams/logo4.png" width="40" alt="logoTorneo"></td>
-          <td>{{matchup.team2 ? matchup.team2.name : 'Equipo sin definir'}}</td>
-          <td>3</td>
+          <td>{{ matchup.team2 ? matchup.team2.name : 'Equipo sin definir' }}</td>
+          <ng-container *ngIf="matchup.team2; else noTeam2Goals">
+            <td *ngFor="let player of getPlayerGoals(matchup.team2.teamId)">{{ player.point }}</td>
+          </ng-container>
+          <ng-template #noTeam2Goals>
+            <td>0</td>
+          </ng-template>
         </tr>
       </tbody>
     </table>
@@ -41,10 +51,10 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Crear el partido {{ index + 1 }}</h1>
+        <h1 class="modal-title fs-5">{{ showModal ? 'Crear el partido ' + (index + 1) : 'Equipo sin definir' }}</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
+      <div *ngIf="showModal" class="modal-body">
         <form [formGroup]="formMatch" (ngSubmit)="addMatch()">
           <div *ngFor="let selectedMatchup of selectedMatchups" class="row text-center mb-4 bg-secondary-subtle">
             <div class="col-5 p-0">
@@ -94,31 +104,31 @@
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalToggleLabel">Crear Eventos del partido {{ index + 1 }}</h1>
+        <h1 class="modal-title fs-5">Crear Eventos del partido</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form [formGroup]="formEvent" (ngSubmit)="addEvent()">
-          <div *ngFor="let selectedMatchup of selectedMatchups" class="row text-center mb-4 bg-secondary-subtle">
+        <form [formGroup]="formEvent" (ngSubmit)="addEvent()" *ngFor="let selectedMatchup of selectedMatchups">
+          <div class="row text-center mb-4 bg-secondary-subtle">
             <div class="col-5 p-0">
               <img class="mt-2" src="../../../../assets/teams/logo3.png" width="40" alt="logoTorneo">
-              <h4>
-                {{selectedMatchup.team1 ? selectedMatchup.team1.name : 'Equipo sin definir'}} </h4>
+              <h4>{{selectedMatchup.team1 ? selectedMatchup.team1.name : 'Equipo sin definir'}}</h4>
             </div>
             <h2 class="col-1 fw-bold m-auto">VS</h2>
             <div class="col-5 p-0">
               <img class="mt-2" src="../../../../assets/teams/logo4.png" width="40" alt="logoTorneo">
-              <h4>
-                {{selectedMatchup.team2 ? selectedMatchup.team2.name : 'Equipo sin definir'}} </h4>
+              <h4>{{selectedMatchup.team2 ? selectedMatchup.team2.name : 'Equipo sin definir'}}</h4>
             </div>
           </div>
+
           <div class="container text-center">
             <div class="row align-items-start">
-              <div class="col">
+              <div *ngIf="showTeamControls" class="col">
                 <div class="form-group mb-3">
                   <label for="player">Jugador</label>
                   <select type="text" class="form-select" name="player" formControlName="player" required>
-                    <option *ngFor="let player of playersTeam1" [value]="player.playerId">{{ player.name }}</option>
+                    <option *ngFor="let player of selectedTeamPlayers" [value]="player.playerId">{{ player.name }}
+                    </option>
                   </select>
                 </div>
                 <div class="form-group mb-3">
@@ -131,23 +141,12 @@
                   </span>
                 </div>
               </div>
-              <div class="col">
-                <div class="form-group mb-3">
-                  <label for="player">Jugador</label>
-                  <select type="text" class="form-select" name="player" formControlName="player" required>
-                    <option *ngFor="let player of playersTeam2" [value]="player.playerId">{{ player.name }}</option>
-                  </select>
-                </div>
-                <div class="form-group mb-3">
-                  <label for="matchEvent">Tipo de Evento</label>
-                  <select type="text" class="form-select" name="matchEvent" formControlName="matchEvent" required>
-                    <option *ngFor="let matchEvent of matchEvents" [value]="matchEvent">
-                      {{ matchEvent }}</option>
-                  </select>
-                  <span *ngIf="isInvalidformEvent('matchEvent')" class="form-text text-danger">
-                    Este dato es requerido
-                  </span>
-                </div>
+            </div>
+            <div class="btn-group row w-100" role="group" aria-label="Basic radio toggle button group">
+              <div class="col-6" *ngFor="let team of [selectedMatchup.team1, selectedMatchup.team2]; let i = index">
+                <input type="radio" class="btn-check" name="btnradio" [id]="'btnradio' + i" autocomplete="off"
+                  (change)="showTeamControls = true; selectedTeamPlayers = i === 0 ? playersTeam1 : playersTeam2;">
+                <label class="btn btn-outline-secondary w-100" [for]="'btnradio' + i">{{ team.name }}</label>
               </div>
             </div>
           </div>

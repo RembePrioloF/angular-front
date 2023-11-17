@@ -4,6 +4,7 @@ export interface PlayerInMatch {
   matchEvent: string;
   player:     string;
   match:      string;
+  tournam:    string;
   deleteAt:   null;
   point:      number;
   createdAt:  string;

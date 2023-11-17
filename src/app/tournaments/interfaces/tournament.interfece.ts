@@ -1,4 +1,5 @@
 import { Match } from "./match.interfece";
+import { PlayerInMatch } from "./player-in-match.interfece";
 import { Team } from "./team.interfece";
 
 export interface Tournament {
@@ -14,4 +15,5 @@ export interface Tournament {
   deleteAt:       null;
   matchs:         Match[];
   teams:          Team[];
+  playerInMatches:PlayerInMatch[];
 }

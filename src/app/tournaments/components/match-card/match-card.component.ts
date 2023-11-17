@@ -12,6 +12,12 @@ import { PlayerService } from '../../services/player.service';
 import { TeamService } from '../../services/team.service';
 import { TournamentService } from '../../services/tournament.service';
 
+interface PlayerEvent {
+  playerId: string;
+  teamId: string;
+  point: number;
+}
+
 @Component({
   selector: 'match-card',
   templateUrl: './match-card.component.html',
@@ -19,6 +25,9 @@ import { TournamentService } from '../../services/tournament.service';
 })
 export class MatchCardComponent implements OnInit {
 
+  public showModal: boolean = false;
+  showTeamControls: boolean = true;
+  selectedTeamPlayers: Player[] = [];
   index = 0;
   team1 = '';
   team2 = '';
@@ -30,6 +39,7 @@ export class MatchCardComponent implements OnInit {
   playersTeam1: Player[] = [];
   playersTeam2: Player[] = [];
   matchEvents: string[] = [];
+  playerGoals: PlayerEvent[] = [];
 
   constructor(
     private tournamService: TournamentService,
@@ -49,6 +59,7 @@ export class MatchCardComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.tournamId = params['id'];
       this.tournamService.getTournamentById(this.tournamId).subscribe((response) => {
+        this.fetchTournamentData(this.tournamId);
         response?.matchs.forEach((match) => {
           this.isMatchCreated[match.index] = true;
           this.matchId = match.id;
@@ -56,6 +67,60 @@ export class MatchCardComponent implements OnInit {
       });
     });
 
+  }
+
+  getPlayerGoals(teamId: string): any[] {
+    return this.playerGoals.filter((player) => player.teamId === teamId);
+  }
+
+  fetchTournamentData(tournamId: string): void {
+    this.tournamService.getTournamentById(tournamId).subscribe((response) => {
+      if (response && Array.isArray(response.playerInMatches)) {
+        const teamGoals = this.processPlayerMatches(response.playerInMatches);
+        this.playerGoals = this.convertTeamGoalsToPlayerEvents(teamGoals);
+      }
+    });
+  }
+
+  convertTeamGoalsToPlayerEvents(teamGoals: Record<string, number>): PlayerEvent[] {
+    const playerEvents: PlayerEvent[] = [];
+    Object.entries(teamGoals).forEach(([teamId, point]) => {
+      playerEvents.push({
+        playerId: '', // Puedes dejarlo en blanco si no es necesario
+        teamId,
+        point,
+      });
+    });
+    return playerEvents;
+  }
+
+  processPlayerMatches(playerInMatches: any[]): Record<string, number> {
+    const teamGoals: Record<string, number> = {};
+
+    playerInMatches.forEach((item) => {
+      if (item.matchEvent === 'gol marcado') {
+        const teamId = item.player.team.teamId;
+        teamGoals[teamId] = (teamGoals[teamId] || 0) + item.point;
+      }
+    });
+
+    return teamGoals;
+  }
+
+  updateEventArray(eventArray: any[], playerId: string, item: any, teamId: string) {
+    console.log(item);
+    const playerIndex = eventArray.findIndex(
+      (player) => player.playerId === playerId && player.teamId === teamId
+    );
+    if (playerIndex !== -1) {
+      eventArray[playerIndex].point += item.point;
+    } else {
+      eventArray.push({
+        playerId,
+        teamId,
+        point: item.point,
+      });
+    }
   }
 
   public formMatch = new FormGroup({
@@ -81,8 +146,7 @@ export class MatchCardComponent implements OnInit {
   get currentEvent(): PlayerInMatch {
     const event = this.formEvent.value as PlayerInMatch;
     event.match = this.matchId;
-    console.log(event);
-
+    event.tournam = this.tournamId;
     return event;
   }
 
@@ -99,10 +163,17 @@ export class MatchCardComponent implements OnInit {
   openMatch(i: number) {
     this.index = i;
     const matchups = this.createMatchups();
+
     if (i >= 0 && i < matchups.length) {
       this.selectedMatchups = [matchups[i]];
-      this.team1 = this.selectedMatchups[0].team1.teamId;
-      this.team2 = this.selectedMatchups[0].team2.teamId;
+      this.team1 = this.selectedMatchups[0]?.team1?.teamId;
+      this.team2 = this.selectedMatchups[0]?.team2?.teamId;
+
+      if (this.team1 && this.team2) {
+        this.showModal = true;
+      } else {
+        this.showModal = false;
+      }
     }
   }
 
@@ -148,6 +219,8 @@ export class MatchCardComponent implements OnInit {
     this.playerService.createPlayerInMatch(this.currentEvent).subscribe({
       next: (response) => {
         this.showSuccessNotification('Evento creado con éxito! ');
+        this.formEvent.reset();
+        this.fetchTournamentData(this.tournamId);
       },
       error: (error) => {
         console.log(error);
