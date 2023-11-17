@@ -108,7 +108,6 @@ export class MatchCardComponent implements OnInit {
   }
 
   updateEventArray(eventArray: any[], playerId: string, item: any, teamId: string) {
-    console.log(item);
     const playerIndex = eventArray.findIndex(
       (player) => player.playerId === playerId && player.teamId === teamId
     );
@@ -227,6 +226,14 @@ export class MatchCardComponent implements OnInit {
         this.showErrorNotification('Ocurrió un error al crear . ' + error.error.message);
       }
     });
+  }
+
+  getTeamLogo(team: any, teamNumber: number): string {
+    if (team && team.logoPath) {
+      return team.logoPath;
+    } else {
+      return `../../../../assets/teams/logo${teamNumber}.png`;
+    }
   }
 
   isInvalidFormMatch(fieldName: string): boolean {
