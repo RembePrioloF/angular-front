@@ -25,21 +25,23 @@ interface PlayerEvent {
 })
 export class MatchCardComponent implements OnInit {
 
-  public showModal: boolean = false;
-  showTeamControls: boolean = true;
-  selectedTeamPlayers: Player[] = [];
   index = 0;
   team1 = '';
   team2 = '';
   matchId = '';
   tournamId: string = '';
-  @Input() teams: Team[] = [];
   isMatchCreated: Record<string, boolean> = {};
   selectedMatchups: any[] = [];
   playersTeam1: Player[] = [];
   playersTeam2: Player[] = [];
   matchEvents: string[] = [];
   playerGoals: PlayerEvent[] = [];
+  public showModal: boolean = false;
+  showTeamControls: boolean = true;
+  selectedTeamPlayers: Player[] = [];
+  @Input() teamsQuarter: Team[] = [];
+  @Input() teamsSemi: Team[] = [];
+  @Input() winner: any;
 
   constructor(
     private tournamService: TournamentService,
@@ -149,19 +151,33 @@ export class MatchCardComponent implements OnInit {
     return event;
   }
 
-  createMatchups() {
+  createMatchupsQuarter() {
     const matchups = [];
-    for (let i = 0; i < 8; i += 2) {
-      const team1 = this.teams[i];
-      const team2 = this.teams[i + 1];
-      matchups.push({ team1, team2 });
+    if (this.teamsQuarter.length >= 8) {
+      for (let i = 0; i < 8; i += 2) {
+        const team1 = this.teamsQuarter[i];
+        const team2 = this.teamsQuarter[i + 1];
+        matchups.push({ team1, team2 });
+      }
+    }
+    return matchups;
+  }
+
+  createMatchupsSemi() {
+    const matchups = [];
+    if (this.teamsSemi.length >= 4) {
+      for (let i = 0; i < 4; i += 2) {
+        const team1 = this.teamsSemi[i];
+        const team2 = this.teamsSemi[i + 1];
+        matchups.push({ team1, team2 });
+      }
     }
     return matchups;
   }
 
   openMatch(i: number) {
     this.index = i;
-    const matchups = this.createMatchups();
+    const matchups = this.createMatchupsQuarter();
 
     if (i >= 0 && i < matchups.length) {
       this.selectedMatchups = [matchups[i]];
@@ -194,7 +210,7 @@ export class MatchCardComponent implements OnInit {
   }
 
   openEvent(i: number) {
-    const matchups = this.createMatchups();
+    const matchups = this.createMatchupsQuarter();
     if (i >= 0 && i < matchups.length) {
       this.selectedMatchups = [matchups[i]];
       const teamIa1: string = this.selectedMatchups[0].team1.teamId;
@@ -217,15 +233,26 @@ export class MatchCardComponent implements OnInit {
     }
     this.playerService.createPlayerInMatch(this.currentEvent).subscribe({
       next: (response) => {
+        this.fetchTournamentData(this.tournamId);
         this.showSuccessNotification('Evento creado con éxito! ');
         this.formEvent.reset();
-        this.fetchTournamentData(this.tournamId);
       },
       error: (error) => {
         console.log(error);
         this.showErrorNotification('Ocurrió un error al crear . ' + error.error.message);
       }
     });
+  }
+
+  endMatch() {
+    const goalsTeam1 = this.getPlayerGoals(this.selectedMatchups[0].team1.teamId).reduce((total, goal) => total + goal.point, 0);
+    const goalsTeam2 = this.getPlayerGoals(this.selectedMatchups[0].team2.teamId).reduce((total, goal) => total + goal.point, 0);
+
+    // Determinar el equipo ganador basado en los goles
+    this.winner = goalsTeam1 > goalsTeam2 ? this.selectedMatchups[0].team1 : this.selectedMatchups[0].team2;
+
+    // Mostrar el equipo que ha marcado más goles
+    this.showSuccessNotification(`El equipo ganador es: ${this.winner.name} con ${Math.max(goalsTeam1, goalsTeam2)} goles.`);
   }
 
   getTeamLogo(team: any, teamNumber: number): string {

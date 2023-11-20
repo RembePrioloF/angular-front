@@ -18,6 +18,7 @@ export class ParticipationPageComponent implements OnInit {
 
   tournamId: string = '';
   teamId: string = '';
+  teamIName: string = '';
   public teams: Team[] = [];
   public positions: string[] = [];
   public players: Player[] = [];
@@ -121,11 +122,11 @@ export class ParticipationPageComponent implements OnInit {
 
   openPlayer(id: string) {
     this.teamId = id;
-    this.teamService.getTeamById(id)
-      .subscribe((response) => {
-        this.players = response?.players || [];
-        this.players.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-      });
+    this.teamService.getTeamById(id).subscribe((response) => {
+      this.teamIName = response?.name as string;
+      this.players = response?.players || [];
+      this.players.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+    });
   }
 
   editTeam() {

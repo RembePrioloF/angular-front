@@ -10,9 +10,9 @@ import { TournamentService } from '../../services/tournament.service';
 })
 export class MatchesPageComponent implements OnInit {
 
-  teams: Team[] = [];
+  teamsQuarter: Team[] = [];
+  teamsSemi: Team[] = [];
   tournamId: string = '';
-  selectedTeams: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -22,10 +22,12 @@ export class MatchesPageComponent implements OnInit {
   ngOnInit(): void {
     this.route.params.subscribe(params => {
       this.tournamId = params['id'];
-      this.tournamentService.getTournamentById(this.tournamId)
-        .subscribe((teamResponse) => {
-          this.teams = teamResponse?.teams || [];
-        });
+      this.tournamentService.getTournamentById(this.tournamId).subscribe((teamResponse) => {
+        this.teamsQuarter = teamResponse?.teams || [];
+        console.log(this.teamsQuarter);
+        this.teamsSemi = this.teamsQuarter.slice(0, 2);
+        console.log(this.teamsSemi);
+      });
     });
   }
 

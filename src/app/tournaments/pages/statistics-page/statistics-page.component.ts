@@ -72,7 +72,6 @@ export class StatisticsPageComponent implements OnInit {
     if (playerIndex !== -1) {
       eventArray[playerIndex].point += item.point;
     } else {
-      console.log(eventArray);
       eventArray.push({
         playerId,
         playerName: item.player.name,

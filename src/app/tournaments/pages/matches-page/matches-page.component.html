@@ -19,76 +19,14 @@
     <div class="row align-items-center">
 
       <div class="col p-1">
-        <match-card [teams]="teams"></match-card>
+        <match-card [teamsQuarter]="teamsQuarter"></match-card>
       </div>
 
       <div class="col p-1">
-        <div class="card border-dark mb-3">
-          <div class="card-header ">
-            <div class="row align-items-center">
-              <div class="col">
-                <p class="m-0"> Partido </p>
-              </div>
-              <div class="col d-flex justify-content-end">
-                <a class="btn" data-bs-toggle="modal" data-bs-target="#myModal">
-                  <i class="fa-solid fa-pen-to-square fs-5"></i>
-                </a>
-              </div>
-            </div>
-          </div>
+        <match-card [teamsSemi]="teamsSemi"></match-card>
 
-          <div class="card-body ">
-            <table class="table table-borderless text-center align-middle">
-              <tbody>
-                <tr>
-                  <td><img src="../../../../assets/teams/logo3.png" width="40" alt="logoTorneo"></td>
-                  <td>equipo 1</td>
-                  <td>2</td>
-                </tr>
-                <tr>
-                  <td><img src="../../../../assets/teams/logo4.png" width="40" alt="logoTorneo"></td>
-                  <td>equipo 4</td>
-                  <td>3</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <!--    <div style="height: 100px;"></div> -->
 
-        <div style="height: 100px;"></div>
-
-        <div class="card border-dark mb-3">
-
-          <div class="card-header ">
-            <div class="row align-items-center">
-              <div class="col">
-                <p class="m-0"> Partido </p>
-              </div>
-              <div class="col d-flex justify-content-end">
-                <a class="btn" data-bs-toggle="modal" data-bs-target="#myModal">
-                  <i class="fa-solid fa-pen-to-square fs-5"></i>
-                </a>
-              </div>
-            </div>
-          </div>
-
-          <div class="card-body ">
-            <table class="table table-borderless text-center align-middle">
-              <tbody>
-                <tr>
-                  <td><img src="../../../../assets/teams/logo3.png" width="40" alt="logoTorneo"></td>
-                  <td>equipo 1</td>
-                  <td>2</td>
-                </tr>
-                <tr>
-                  <td><img src="../../../../assets/teams/logo4.png" width="40" alt="logoTorneo"></td>
-                  <td>equipo 4</td>
-                  <td>3</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
       </div>
       <div class="col p-1">
         <div class="card border-dark mb-3">
