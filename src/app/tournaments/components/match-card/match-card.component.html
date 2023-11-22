@@ -1,17 +1,16 @@
-<div class="card border-dark mb-3" style="max-width: 30rem;"
-  *ngFor="let matchup of createMatchupsQuarter(); let i = index">
+<div class="card border-dark mb-3" style="max-width: 30rem;">
   <div class="card-header">
     <div class="row align-items-center">
       <div class="col-md-7 d-md-flex justify-content-end">
-        <p class="m-0 fw-bold">Partido {{ i + 1 }}</p>
+        <p class="m-0 fw-bold">{{match.field}}</p>
       </div>
       <div class="col-md-5 d-md-flex justify-content-end">
-        <button *ngIf="!isMatchCreated[i]; else eventButton" class="btn" data-bs-toggle="modal" (click)="openMatch(i)"
+        <button *ngIf="match.openEvent === 0; else eventButton" class="btn" data-bs-toggle="modal" (click)="onOpenMatch()"
           data-bs-target="#openMatch">
           <i class="fa-solid fa-pen-to-square fs-5"></i>
         </button>
         <ng-template #eventButton>
-          <button class="btn bg-success-subtle p-0 m-2" data-bs-toggle="modal" (click)="openEvent(i)"
+          <button class="btn bg-success-subtle p-0 m-2" data-bs-toggle="modal" (click)="openEvent()"
             data-bs-target="#openEvent">
             <i class="fa-solid fa-pen-to-square fs-5"></i>Eventos
           </button>
@@ -21,23 +20,13 @@
   </div>
 
   <div class="card-body">
-    <table class="table table-hover table-borderless text-center align-middle">
+    <table class="table table-borderless text-center align-middle">
       <tbody>
-        <ng-container *ngFor="let team of [matchup.team1, matchup.team2]; let i = index">
+        <ng-container *ngFor="let team of match.teams; let i = index">
           <tr>
             <td><img [src]="getTeamLogo(team, i + 1)" width="40" alt="logoTorneo"></td>
             <td>{{ team ? team.name : 'Equipo sin definir' }}</td>
-            <ng-container *ngIf="team">
-              <ng-container *ngIf="getPlayerGoals(team.teamId).length > 0; else noGoals">
-                <td *ngFor="let player of getPlayerGoals(team.teamId)">{{ player.point }}</td>
-              </ng-container>
-              <ng-template #noGoals>
-                <td>0</td>
-              </ng-template>
-            </ng-container>
-            <ng-container *ngIf="!team">
-              <td>0</td>
-            </ng-container>
+            <td>{{team.point}}</td>
           </tr>
         </ng-container>
       </tbody>
@@ -45,7 +34,7 @@
   </div>
 </div>
 
-<div class="card border-dark mb-3" style="max-width: 30rem;"
+<!-- <div class="card border-dark mb-3" style="max-width: 30rem;"
   *ngFor="let matchup of createMatchupsSemi(); let i = index">
   <div class="card-header">
     <div class="row align-items-center">
@@ -68,7 +57,7 @@
   </div>
 
   <div class="card-body">
-    <table class="table table-hover table-borderless text-center align-middle">
+    <table class="table table-borderless text-center align-middle">
       <tbody>
         <ng-container *ngFor="let team of [matchup.team1, matchup.team2]; let i = index">
           <tr>
@@ -90,28 +79,27 @@
       </tbody>
     </table>
   </div>
-</div>
+</div> -->
 
-<div class="modal fade" id="openMatch" data-bs-backdrop="static">
+<div #openMatch class="modal fade"  data-bs-backdrop="static">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5">{{ showModal ? 'Crear el partido ' + (index + 1) : 'Equipo sin definir' }}</h1>
+        <h1 class="modal-title fs-5">{{ 'Crear el partido'}}</h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div *ngIf="showModal" class="modal-body">
+      <div class="modal-body">
         <form [formGroup]="formMatch" (ngSubmit)="addMatch()">
-          <div *ngFor="let selectedMatchup of selectedMatchups" class="row text-center mb-4 bg-secondary-subtle">
+          <div class="row text-center mb-4 bg-secondary-subtle">
             <div class="col-5 p-0">
               <img class="mt-2" src="../../../../assets/teams/logo3.png" width="40" alt="logoTorneo">
-              <h4 for="recipient-name">
-                {{selectedMatchup.team1 ? selectedMatchup.team1.name : 'Equipo sin definir'}} </h4>
+              <h4 for="recipient-name"> {{match.teams && match.teams[0].name}}</h4>
             </div>
             <h2 class="col-1 fw-bold my-auto">VS</h2>
             <div class="col-5 p-0">
               <img class="mt-2" src="../../../../assets/teams/logo4.png" width="40" alt="logoTorneo">
               <h4 for="recipient-name">
-                {{selectedMatchup.team2 ? selectedMatchup.team2.name : 'Equipo sin definir'}} </h4>
+                {{match.teams && match.teams[1].name}} </h4>
             </div>
           </div>
           <div class="form-group mb-3">
@@ -150,26 +138,25 @@
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5">Crear Eventos del partido</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button #closeModal type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form [formGroup]="formEvent" (ngSubmit)="addEvent()"
-          *ngFor="let selectedMatchup of selectedMatchups; let i = index">
+        <form [formGroup]="formEvent" (ngSubmit)="addEvent()">
           <div class="row text-center mb-4 bg-secondary-subtle">
             <div class="col-5 p-0">
               <img class="mt-2" src="../../../../assets/teams/logo3.png" width="40" alt="logoTorneo">
-              <h4>{{selectedMatchup.team1 ? selectedMatchup.team1.name : 'Equipo sin definir'}}</h4>
+              <h4>{{match.teams && match.teams[0].name}}</h4>
             </div>
             <h2 class="col-1 fw-bold m-auto">VS</h2>
             <div class="col-5 p-0">
               <img class="mt-2" src="../../../../assets/teams/logo4.png" width="40" alt="logoTorneo">
-              <h4>{{selectedMatchup.team2 ? selectedMatchup.team2.name : 'Equipo sin definir'}}</h4>
+              <h4>{{match.teams && match.teams[1].name}}</h4>
             </div>
           </div>
 
           <div class="container text-center px-1">
             <div class="row align-items-start">
-              <div *ngIf="showTeamControls" class="col">
+              <div class="col">
                 <div class="form-group mb-3">
                   <label for="player">Jugador</label>
                   <select type="text" class="form-select" name="player" formControlName="player" required>
@@ -189,10 +176,17 @@
               </div>
             </div>
             <div class="btn-group row w-100 pb-3" role="group" aria-label="Basic radio toggle button group">
-              <div class="col-6 p-0" *ngFor="let team of [selectedMatchup.team1, selectedMatchup.team2]; let i = index">
-                <input type="radio" class="btn-check" name="btnradio" [id]="'btnradio' + i" autocomplete="off"
-                  (change)="showTeamControls = true; selectedTeamPlayers = i === 0 ? playersTeam1 : playersTeam2;">
-                <label class="btn btn-outline-secondary w-100" [for]="'btnradio' + i">{{ team.name }}</label>
+              <div class="col-6 p-0">
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio0" autocomplete="off"
+                  (change)="showTeamControls = true; selectedTeamPlayers =  playersTeam1;">
+                <label class="btn btn-outline-secondary w-100" for="btnradio0">{{match.teams &&
+                  match.teams[0].name}}</label>
+              </div>
+              <div class="col-6 p-0">
+                <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off"
+                  (change)="showTeamControls = true; selectedTeamPlayers = playersTeam2;">
+                <label class="btn btn-outline-secondary w-100" for="btnradio1">{{match.teams &&
+                  match.teams[1].name}}</label>
               </div>
             </div>
           </div>

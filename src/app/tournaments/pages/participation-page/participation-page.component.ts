@@ -69,11 +69,11 @@ export class ParticipationPageComponent implements OnInit {
       this.tournamId = params['id'];
       this.tournamService.getTournamentById(this.tournamId).subscribe((response) => {
         this.teams = response?.teams || [];
-        this.teams.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+        this.teams.sort((a, b) => new Date(a.createdAt!).getTime() - new Date(b.createdAt!).getTime());
         this.openPlayer(this.teamId);
         this.teams.forEach((team) => {
           this.teamService.getTeamById(team.teamId).subscribe((teamResponse) => {
-            this.teamPlayersCount[team.teamId] = teamResponse?.players.length || 0;
+            this.teamPlayersCount[team.teamId] = teamResponse?.players!.length || 0;
           });
         });
       });

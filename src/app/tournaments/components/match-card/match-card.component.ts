@@ -1,12 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import Swal from 'sweetalert2';
 import { Match } from '../../interfaces/match.interfece';
 import { PlayerInMatch } from '../../interfaces/player-in-match.interfece';
 import { Player } from '../../interfaces/player.interfece';
-import { Team } from '../../interfaces/team.interfece';
 import { MatchService } from '../../services/match.service';
 import { PlayerService } from '../../services/player.service';
 import { TeamService } from '../../services/team.service';
@@ -25,23 +24,25 @@ interface PlayerEvent {
 })
 export class MatchCardComponent implements OnInit {
 
-  index = 0;
   team1 = '';
   team2 = '';
+  /* index = 0;
   matchId = '';
-  tournamId: string = '';
+  */
   isMatchCreated: Record<string, boolean> = {};
   selectedMatchups: any[] = [];
   playersTeam1: Player[] = [];
   playersTeam2: Player[] = [];
-  matchEvents: string[] = [];
-  playerGoals: PlayerEvent[] = [];
-  public showModal: boolean = false;
   showTeamControls: boolean = true;
   selectedTeamPlayers: Player[] = [];
-  @Input() teamsQuarter: Team[] = [];
-  @Input() teamsSemi: Team[] = [];
-  @Input() winner: any;
+  matchEvents: string[] = [];
+  public showModal: boolean = false;
+  playerGoals: PlayerEvent[] = [];
+  @Input() tournamId: string = '';
+  @Input() match: Match = {};
+  @Output() update: EventEmitter<any> = new EventEmitter<any>();
+  @ViewChild('closeModal') closeModal!: ElementRef;
+  @ViewChild('openMatch') openMatch!: TemplateRef<any>;
 
   constructor(
     private tournamService: TournamentService,
@@ -57,17 +58,17 @@ export class MatchCardComponent implements OnInit {
     this.http.get<string[]>('http://localhost:3000/player_in_match/match_event').subscribe((data) => {
       this.matchEvents = data;
     });
-
-    this.route.params.subscribe(params => {
-      this.tournamId = params['id'];
-      this.tournamService.getTournamentById(this.tournamId).subscribe((response) => {
-        this.fetchTournamentData(this.tournamId);
-        response?.matchs.forEach((match) => {
-          this.isMatchCreated[match.index] = true;
-          this.matchId = match.id;
-        });
-      });
-    });
+    /*
+        this.route.params.subscribe(params => {
+          this.tournamId = params['id'];
+          this.tournamService.getTournamentById(this.tournamId).subscribe((response) => {
+            this.fetchTournamentData(this.tournamId);
+            response?.matchs.forEach((match) => {
+              this.isMatchCreated[match.index] = true;
+              this.matchId = match.id;
+            });
+          });
+        }); */
 
   }
 
@@ -75,16 +76,7 @@ export class MatchCardComponent implements OnInit {
     return this.playerGoals.filter((player) => player.teamId === teamId);
   }
 
-  fetchTournamentData(tournamId: string): void {
-    this.tournamService.getTournamentById(tournamId).subscribe((response) => {
-      if (response && Array.isArray(response.playerInMatches)) {
-        const teamGoals = this.processPlayerMatches(response.playerInMatches);
-        this.playerGoals = this.convertTeamGoalsToPlayerEvents(teamGoals);
-      }
-    });
-  }
-
-  convertTeamGoalsToPlayerEvents(teamGoals: Record<string, number>): PlayerEvent[] {
+  /* convertTeamGoalsToPlayerEvents(teamGoals: Record<string, number>): PlayerEvent[] {
     const playerEvents: PlayerEvent[] = [];
     Object.entries(teamGoals).forEach(([teamId, point]) => {
       playerEvents.push({
@@ -94,35 +86,35 @@ export class MatchCardComponent implements OnInit {
       });
     });
     return playerEvents;
-  }
+  } */
 
-  processPlayerMatches(playerInMatches: any[]): Record<string, number> {
-    const teamGoals: Record<string, number> = {};
+  /*  processPlayerMatches(playerInMatches: any[]): Record<string, number> {
+     const teamGoals: Record<string, number> = {};
 
-    playerInMatches.forEach((item) => {
-      if (item.matchEvent === 'gol marcado') {
-        const teamId = item.player.team.teamId;
-        teamGoals[teamId] = (teamGoals[teamId] || 0) + item.point;
-      }
-    });
+     playerInMatches.forEach((item) => {
+       if (item.matchEvent === 'gol marcado') {
+         const teamId = item.player.team.teamId;
+         teamGoals[teamId] = (teamGoals[teamId] || 0) + item.point;
+       }
+     });
 
-    return teamGoals;
-  }
+     return teamGoals;
+   } */
 
-  updateEventArray(eventArray: any[], playerId: string, item: any, teamId: string) {
-    const playerIndex = eventArray.findIndex(
-      (player) => player.playerId === playerId && player.teamId === teamId
-    );
-    if (playerIndex !== -1) {
-      eventArray[playerIndex].point += item.point;
-    } else {
-      eventArray.push({
-        playerId,
-        teamId,
-        point: item.point,
-      });
-    }
-  }
+  /*  updateEventArray(eventArray: any[], playerId: string, item: any, teamId: string) {
+     const playerIndex = eventArray.findIndex(
+       (player) => player.playerId === playerId && player.teamId === teamId
+     );
+     if (playerIndex !== -1) {
+       eventArray[playerIndex].point += item.point;
+     } else {
+       eventArray.push({
+         playerId,
+         teamId,
+         point: item.point,
+       });
+     }
+   } */
 
   public formMatch = new FormGroup({
     dateMatch: new FormControl('', [Validators.required]),
@@ -137,7 +129,6 @@ export class MatchCardComponent implements OnInit {
 
   get currentMatch(): Match {
     const match = this.formMatch.value as Match;
-    match.index = this.index;
     match.tournam = this.tournamId;
     match.localTeam = this.team1;
     match.visitingTeam = this.team2;
@@ -146,12 +137,12 @@ export class MatchCardComponent implements OnInit {
 
   get currentEvent(): PlayerInMatch {
     const event = this.formEvent.value as PlayerInMatch;
-    event.match = this.matchId;
+    event.match = this.match.id!;
     event.tournam = this.tournamId;
     return event;
   }
 
-  createMatchupsQuarter() {
+  /* createMatchupsQuarter() {
     const matchups = [];
     if (this.teamsQuarter.length >= 8) {
       for (let i = 0; i < 8; i += 2) {
@@ -161,9 +152,9 @@ export class MatchCardComponent implements OnInit {
       }
     }
     return matchups;
-  }
+  } */
 
-  createMatchupsSemi() {
+  /* createMatchupsSemi() {
     const matchups = [];
     if (this.teamsSemi.length >= 4) {
       for (let i = 0; i < 4; i += 2) {
@@ -173,24 +164,13 @@ export class MatchCardComponent implements OnInit {
       }
     }
     return matchups;
-  }
+  } */
 
-  openMatch(i: number) {
-    this.index = i;
-    const matchups = this.createMatchupsQuarter();
-
-    if (i >= 0 && i < matchups.length) {
-      this.selectedMatchups = [matchups[i]];
-      this.team1 = this.selectedMatchups[0]?.team1?.teamId;
-      this.team2 = this.selectedMatchups[0]?.team2?.teamId;
-
-      if (this.team1 && this.team2) {
-        this.showModal = true;
-      } else {
-        this.showModal = false;
-      }
-    }
-  }
+  onOpenMatch() {
+    this.team1 = this.match.teams![0].teamId;
+    this.team2 = this.match.teams![1].teamId;
+/* this.openMatch.
+ */  }
 
   addMatch() {
     if (this.formMatch.invalid) {
@@ -199,7 +179,8 @@ export class MatchCardComponent implements OnInit {
     }
     this.matchService.createMatch(this.currentMatch).subscribe({
       next: (response) => {
-        this.isMatchCreated[this.index] = true;
+        this.showModal = false;
+        this.update.emit()
         this.showSuccessNotification('Partido creado con éxito! ');
       },
       error: (error) => {
@@ -209,21 +190,17 @@ export class MatchCardComponent implements OnInit {
     });
   }
 
-  openEvent(i: number) {
-    const matchups = this.createMatchupsQuarter();
-    if (i >= 0 && i < matchups.length) {
-      this.selectedMatchups = [matchups[i]];
-      const teamIa1: string = this.selectedMatchups[0].team1.teamId;
-      this.teamService.getTeamById(teamIa1)
-        .subscribe((response) => {
-          this.playersTeam1 = response?.players || [];
-        });
-      const teamIa2: string = this.selectedMatchups[0].team2.teamId;
-      this.teamService.getTeamById(teamIa2)
-        .subscribe((response) => {
-          this.playersTeam2 = response?.players || [];
-        });
-    }
+  openEvent() {
+    const teamIa1: string = this.match.teams![0].teamId;
+    this.teamService.getTeamById(teamIa1).subscribe((response) => {
+      this.playersTeam1 = response?.players || [];
+    });
+    const teamIa2: string = this.match.teams![1].teamId;
+    this.teamService.getTeamById(teamIa2).subscribe((response) => {
+      this.playersTeam2 = response?.players || [];
+    });
+
+    this.showModal = true;
   }
 
   addEvent() {
@@ -233,9 +210,10 @@ export class MatchCardComponent implements OnInit {
     }
     this.playerService.createPlayerInMatch(this.currentEvent).subscribe({
       next: (response) => {
-        this.fetchTournamentData(this.tournamId);
-        this.showSuccessNotification('Evento creado con éxito! ');
+        this.closeModal.nativeElement.click()
         this.formEvent.reset();
+        this.update.emit()
+        this.showSuccessNotification('Evento creado con éxito! ');
       },
       error: (error) => {
         console.log(error);
@@ -245,14 +223,16 @@ export class MatchCardComponent implements OnInit {
   }
 
   endMatch() {
-    const goalsTeam1 = this.getPlayerGoals(this.selectedMatchups[0].team1.teamId).reduce((total, goal) => total + goal.point, 0);
+    /* const goalsTeam1 = this.getPlayerGoals(this.selectedMatchups[0].team1.teamId).reduce((total, goal) => total + goal.point, 0);
     const goalsTeam2 = this.getPlayerGoals(this.selectedMatchups[0].team2.teamId).reduce((total, goal) => total + goal.point, 0);
-
     // Determinar el equipo ganador basado en los goles
-    this.winner = goalsTeam1 > goalsTeam2 ? this.selectedMatchups[0].team1 : this.selectedMatchups[0].team2;
+    const win = goalsTeam1 > goalsTeam2 ? this.selectedMatchups[0].team1 : this.selectedMatchups[0].team2;
+    this.teamsSemi = Array.isArray(win) ? win[0] : win;
 
+    console.log(this.winner);
     // Mostrar el equipo que ha marcado más goles
     this.showSuccessNotification(`El equipo ganador es: ${this.winner.name} con ${Math.max(goalsTeam1, goalsTeam2)} goles.`);
+   */
   }
 
   getTeamLogo(team: any, teamNumber: number): string {

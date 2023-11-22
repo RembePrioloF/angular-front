@@ -82,24 +82,37 @@ export class StatisticsPageComponent implements OnInit {
   }
 
   sendEmail() {
-    this.isLoading = true;
     const componentElement = this.elementRef.nativeElement.cloneNode(true);
     const appNavbarElement = componentElement.querySelector('app-navbar');
     const buttonElement = componentElement.querySelector('button.btn-outline-secondary');
     if (appNavbarElement) {
       appNavbarElement.remove();
       buttonElement.remove();
-      const htmlTemplate = componentElement.innerHTML;
-      this.sendEmailWithTemplate(htmlTemplate).subscribe({
-        next: (response: any) => {
-          this.showSuccessNotification(response.message);
-          this.isLoading = false;
-        },
-        error: (error) => {
-          this.showErrorNotification('' + error.error.message);
-          this.isLoading = false;
+      Swal.fire({
+        title: "¿Está seguro de enviar las estadisticas?",
+        text: "¡No podrás revertir esto!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#6a6d70",
+        confirmButtonText: "Si, envialos"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          this.isLoading = true;
+          const htmlTemplate = componentElement.innerHTML;
+          this.sendEmailWithTemplate(htmlTemplate).subscribe({
+            next: (response: any) => {
+              this.showSuccessNotification(response.message);
+              this.isLoading = false;
+            },
+            error: (error) => {
+              this.showErrorNotification('' + error.error.message);
+              this.isLoading = false;
+            }
+          });
         }
       });
+
     }
   }
 

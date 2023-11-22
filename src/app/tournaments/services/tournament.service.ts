@@ -24,4 +24,9 @@ export class TournamentService {
       .pipe(catchError(e => of(undefined)));
   }
 
+  getTournamentMatchById(id: string): Observable<Tournament | undefined> {
+    return this.http.get<Tournament>(`${this.baseUrl}/tournam/match/${id}`)
+      .pipe(catchError(e => of(undefined)));
+  }
+
 }
