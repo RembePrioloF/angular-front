@@ -13,6 +13,7 @@ import { ParticipationPageComponent } from './pages/participation-page/participa
 import { StatisticsPageComponent } from './pages/statistics-page/statistics-page.component';
 import { TournamentPageComponent } from './pages/tournament-page/tournament-page.component';
 import { TournamentRoutingModule } from './tournament-routing.module';
+import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -33,6 +34,7 @@ import { TournamentRoutingModule } from './tournament-routing.module';
     CommonModule,
     TournamentRoutingModule,
     ReactiveFormsModule,
+    NgbDatepickerModule,
   ],
   providers: [],
 })

@@ -4,7 +4,9 @@ export interface Match {
   index?:        number;
   dateMatch?:    string;
   field?:        string;
+  endMatch?:     boolean;
   referee?:      string;
+  typeMatch?:    string;
   tournam?:      string;
   localTeam?:    string;
   visitingTeam?: string;

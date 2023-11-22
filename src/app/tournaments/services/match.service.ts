@@ -24,4 +24,8 @@ export class MatchService {
       .pipe(catchError(e => of(undefined)));
   }
 
+  updateMatch(id: string, match: Match): Observable<Match> {
+    return this.http.put<Match>(`${this.baseUrl}/match/${id}`, match);
+  }
+
 }

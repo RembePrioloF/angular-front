@@ -19,18 +19,142 @@
     <div class="row align-items-center">
 
       <div class="col p-1">
-        <match-card *ngFor="let match of matchQuarter" [match]="match" [tournamId]="tournamId" (update)="onUpdate()"></match-card>
+        <match-card *ngFor="let match of matchQuarter" [match]="match" typeMatch="cuartos de final"
+          [tournamId]="tournamId" (update)="onUpdate()" (modalMatch)="modalMatch(match,'cuartos de final')"
+          (modalEvent)="modalEvent(match,'cuartos de final')"></match-card>
       </div>
 
       <div class="col p-1">
-        <match-card *ngFor="let match of matchSemi" [match]="match" [tournamId]="tournamId"></match-card>
+        <match-card *ngFor="let match of matchSemi" [match]="match" typeMatch="semi final" [tournamId]="tournamId"
+          (update)="onUpdate()" (modalMatch)="modalMatch(match,'semi final')"
+          (modalEvent)="modalEvent(match,'semi final')"></match-card>
       </div>
 
       <div class="col p-1">
-        <match-card *ngFor="let match of matchFinal" [match]="match" [tournamId]="tournamId"></match-card>
+        <match-card *ngFor="let match of matchFinal" [match]="match" typeMatch="final" [tournamId]="tournamId"
+          (update)="onUpdate()" (modalMatch)="modalMatch(match,'final')"
+          (modalEvent)="modalEvent(match,'final')"></match-card>
       </div>
     </div>
   </div>
 
   <app-footer></app-footer>
 </div>
+
+<ng-template #content let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h1 class="modal-title fs-5" id="modal-basic-title">{{ 'Crear el partido'}}</h1>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="formMatch" (ngSubmit)="addMatch(modal)">
+        <div class="row text-center mb-4 bg-secondary-subtle">
+          <div class="col-5 p-0">
+            <img class="mt-2" src="../../../../assets/teams/logo3.png" width="40" alt="logoTorneo">
+            <h4 for="recipient-name"> {{match.teams && match.teams[0].name}}</h4>
+          </div>
+          <h2 class="col-1 fw-bold my-auto">VS</h2>
+          <div class="col-5 p-0">
+            <img class="mt-2" src="../../../../assets/teams/logo4.png" width="40" alt="logoTorneo">
+            <h4 for="recipient-name">
+              {{match.teams && match.teams[1].name}} </h4>
+          </div>
+        </div>
+        <div class="form-group mb-3">
+          <label for="dateMatch">Fecha del partido</label>
+          <input type="datetime-local" class="form-control" formControlName="dateMatch" name="dateMatch"
+            aria-describedby="addon-wrapping" required>
+          <span *ngIf="isInvalidFormMatch('dateMatch')" class="form-text text-danger">
+            Este dato es requerido
+          </span>
+        </div>
+        <div class="form-group mb-3">
+          <label for="field">Ubicación del partido</label>
+          <input type="text" class="form-control" name="field" formControlName="field"
+            placeholder="Ingrese la ubicación del partido" required>
+          <span *ngIf="isInvalidFormMatch('dateMatch')" class="form-text text-danger">
+            Este dato es requerido
+          </span>
+        </div>
+        <div class="form-group mb-3">
+          <label for="referee">Árbitro</label>
+          <input type="text" class="form-control" name="referee" formControlName="referee"
+            placeholder="Ingrese el nombre del Árbitro (opcional)">
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary me-auto" (click)="modal.close('close click')">Cerrar</button>
+        <button type="button" class="btn btn-primary w-50" (click)="addMatch(modal)">Guardar</button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #contentEvent let-modal>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h1 class="modal-title fs-5">Crear Eventos del partido</h1>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="formEvent" (ngSubmit)="addEvent(modal)">
+        <div class="row text-center mb-4 bg-secondary-subtle">
+          <div class="col-5 p-0">
+            <img class="mt-2" src="../../../../assets/teams/logo3.png" width="40" alt="logoTorneo">
+            <h4>{{match.teams && match.teams[0].name}}</h4>
+          </div>
+          <h2 class="col-1 fw-bold m-auto">VS</h2>
+          <div class="col-5 p-0">
+            <img class="mt-2" src="../../../../assets/teams/logo4.png" width="40" alt="logoTorneo">
+            <h4>{{match.teams && match.teams[1].name}}</h4>
+          </div>
+        </div>
+
+        <div class="container text-center px-1">
+          <div class="row align-items-start">
+            <div class="col">
+              <div class="form-group mb-3">
+                <label for="player">Jugador</label>
+                <select type="text" class="form-select" name="player" formControlName="player" required>
+                  <option *ngFor="let player of selectedTeamPlayers" [value]="player.playerId">{{ player.name }}
+                  </option>
+                </select>
+              </div>
+              <div class="form-group mb-3">
+                <label for="matchEvent">Tipo de Evento</label>
+                <select type="text" class="form-select" name="matchEvent" formControlName="matchEvent" required>
+                  <option *ngFor="let matchEvent of matchEvents" [value]="matchEvent">{{ matchEvent }}</option>
+                </select>
+                <span *ngIf="isInvalidformEvent('matchEvent')" class="form-text text-danger">
+                  Este dato es requerido
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="btn-group row w-100 pb-3" role="group" aria-label="Basic radio toggle button group">
+            <div class="col-6 p-0">
+              <input type="radio" class="btn-check" name="btnradio" id="btnradio0" autocomplete="off"
+                (change)="showTeamControls = true; selectedTeamPlayers =  playersTeam1;">
+              <label class="btn btn-outline-secondary w-100" for="btnradio0">{{match.teams &&
+                match.teams[0].name}}</label>
+            </div>
+            <div class="col-6 p-0">
+              <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off"
+                (change)="showTeamControls = true; selectedTeamPlayers = playersTeam2;">
+              <label class="btn btn-outline-secondary w-100" for="btnradio1">{{match.teams &&
+                match.teams[1].name}}</label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer row">
+          <button type="button" class="col-2 btn btn-secondary me-auto"
+            (click)="modal.close('close click')">Cerrar</button>
+          <button type="button" class="col-3 btn btn-danger mx-auto" data-bs-dismiss="modal" (click)="endMatch(modal)">
+            Fin del Partido</button>
+          <button type="button" class="col-6 btn btn-primary" (click)="addEvent(modal)">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</ng-template>
